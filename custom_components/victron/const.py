@@ -1274,9 +1274,9 @@ class register_input_source(Enum):
     NOT_CONNECTED = 240
 
 system_registers = {
-    "system_serial": RegisterInfo(800, STRING(6)),
-    "system_relay_0": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
-    "system_relay_1": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
+    "Serial (System)": RegisterInfo(800, STRING(6)),
+    "CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
+    "CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
     "system_pvonoutput_L1": RegisterInfo(808, UINT16, UnitOfPower.WATT),
     # "system_pvonoutput_L2": RegisterInfo(809, UINT16, UnitOfPower.WATT),
     # "system_pvonoutput_L3": RegisterInfo(810, UINT16, UnitOfPower.WATT),
@@ -1342,7 +1342,7 @@ register_info_dict = {
     "solarcharger_registers": solarcharger_registers,
     # "solarcharger_tracker_voltage_registers": solarcharger_tracker_voltage_registers,
     # "solarcharger_tracker_registers": solarcharger_tracker_registers, 
-    "pvinverter_registers": pvinverter_registers, 
+    # "pvinverter_registers": pvinverter_registers, 
     # "motordrive_registers": motordrive_registers,
     "charger_registers": charger_registers, 
     "settings_registers": settings_registers,
