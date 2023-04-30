@@ -189,87 +189,59 @@ class vebus_error(Enum):
     INTERNAL_ERROR = 26
 
 vebus_registers = { 
-    "vebus_activein_L1_voltage": RegisterInfo(3, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "vebus_activein_L2_voltage": RegisterInfo(4, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "vebus_activein_L3_voltage": RegisterInfo(5, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "vebus_activein_L1_current": RegisterInfo(6, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "vebus_activein_L2_current": RegisterInfo(7, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "vebus_activein_L3_current": RegisterInfo(8, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "vebus_activein_L1_frequency": RegisterInfo(9, INT16, FREQUENCY_HERTZ, 100),
-    # "vebus_activein_L2_frequency": RegisterInfo(10, INT16, FREQUENCY_HERTZ, 100),
-    # "vebus_activein_L3_frequency": RegisterInfo(11,INT16, FREQUENCY_HERTZ, 100),
-    "vebus_activein_L1_power": RegisterInfo(12, INT16, UnitOfPower.WATT, 0.1), # could be either POWER_WATT or POWER_VOLT_AMPERE W was chosen
-    # "vebus_activein_L2_power": RegisterInfo(13, INT16, UnitOfPower.WATT, 0.1), # could be either POWER_WATT or POWER_VOLT_AMPERE W was chosen
-    # "vebus_activein_L3_power": RegisterInfo(14, INT16, UnitOfPower.WATT, 0.1), # could be either POWER_WATT or POWER_VOLT_AMPERE W was chosen
-    "vebus_out_L1_voltage": RegisterInfo(15, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "vebus_out_L2_voltage": RegisterInfo(16, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "vebus_out_L3_voltage": RegisterInfo(17, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "vebus_out_L1_current": RegisterInfo(18, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "vebus_out_L2_current": RegisterInfo(19, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "vebus_out_L3_current": RegisterInfo(20, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "vebus_out_L1_frequency": RegisterInfo(21, INT16, FREQUENCY_HERTZ, 100),
-    "vebus_activein_currentlimit": RegisterInfo(22, INT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", True)),
-    "vebus_out_L1_power": RegisterInfo(23, INT16, UnitOfPower.WATT, 0.1),
-    # "vebus_out_L2_power": RegisterInfo(24, INT16, UnitOfPower.WATT, 0.1),
-    # "vebus_out_L3_power": RegisterInfo(25, INT16, UnitOfPower.WATT, 0.1),
-    "vebus_battery_voltage": RegisterInfo(26, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "vebus_battery_current": RegisterInfo(27, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "vebus_numberofphases": RegisterInfo(28, UINT16), #the number count has no unit of measurement
-    "vebus_activein_activeinput": RegisterInfo(register=29, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
-    "vebus_soc": RegisterInfo(30, UINT16, PERCENTAGE, 10, SliderWriteType()),
-    "vebus_state": RegisterInfo(register=31, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)), #This has no unit of measurement
-    "vebus_error": RegisterInfo(register=32, dataType=UINT16, entityType=TextReadEntityType(vebus_error)), #This has no unit of measurement
-    "vebus_mode": RegisterInfo(register=33, dataType=UINT16, entityType=SelectWriteType(vebus_mode)), #This has no unit of measurement
-    "vebus_alarm_hightemperature": RegisterInfo(register=34, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_lowbattery": RegisterInfo(register=35, dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_overload": RegisterInfo(register=36,dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_L1_acpowersetpoint": RegisterInfo(register=37, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
-    "vebus_disablecharge": RegisterInfo(register=38, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    "vebus_disablefeedin": RegisterInfo(39, UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "vebus_L2_acpowersetpoint": RegisterInfo(register=40, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
-    "vebus_L3_acpowersetpoint": RegisterInfo(register=41, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
-    "vebus_alarm_temperaturesensor": RegisterInfo(register=42, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_voltagesensor": RegisterInfo(register=43, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_L1_higtemperature": RegisterInfo(register=44, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_L1_lowbattery": RegisterInfo(register=45, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_L1_overload": RegisterInfo(register=46, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_L1_ripple": RegisterInfo(register=47, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L2_higtemperature": RegisterInfo(register=48, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L2_lowbattery": RegisterInfo(register=49, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L2_overload": RegisterInfo(register=50, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L2_ripple": RegisterInfo(register=51, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L3_higtemperature": RegisterInfo(register=52, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L3_lowbattery": RegisterInfo(register=53, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L3_overload": RegisterInfo(register=54, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "vebus_alarm_L3_ripple": RegisterInfo(register=55, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_pvinverter_disable": RegisterInfo(register=56, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    "vebus_bms_allowtocharge": RegisterInfo(register=57, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_bms_allowtodischarge": RegisterInfo(register=58, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_bms_bmsexpected": RegisterInfo(register=59, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_bms_error": RegisterInfo(register=60, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_battery_temperature": RegisterInfo(61, INT16, UnitOfTemperature.CELSIUS, 10),
-    "vebus_systemreset": RegisterInfo(register=62, dataType=UINT16, entityType=ButtonWriteType()), #This has no unit of measurement
-    "vebus_alarm_phaserotation": RegisterInfo(register=63, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_alarm_gridlost": RegisterInfo(register=64, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    "vebus_donotfeedinovervoltage": RegisterInfo(register=65, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    "vebus_L1_maxfeedinpower": RegisterInfo(66, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
-    # "vebus_L2_maxfeedinpower": RegisterInfo(67, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
-    # "vebus_L3_maxfeedinpower": RegisterInfo(68, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
-    "vebus_state_ignoreacin1": RegisterInfo(register=69, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_state_ignoreacin2": RegisterInfo(register=70, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_targetpowerismaxfeedin": RegisterInfo(register=71, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    "vebus_fixsolaroffsetto100mv": RegisterInfo(register=72, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    "vebus_sustain": RegisterInfo(register=73, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    "vebus_acin1toacout": RegisterInfo(74, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_acin1toinverter": RegisterInfo(76, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_acin2toacout": RegisterInfo(78, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_acin2toinverter": RegisterInfo(80, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_acouttoacin1": RegisterInfo(82, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_acouttoacin2": RegisterInfo(84, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_invertertoacin1": RegisterInfo(86, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_invertertoacin2": RegisterInfo(88, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_invertertoacout": RegisterInfo(90, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "vebus_outtoinverter": RegisterInfo(92, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100)
+    "Input voltage": RegisterInfo(3, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    "Input current": RegisterInfo(6, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Input frequency": RegisterInfo(9, INT16, FREQUENCY_HERTZ, 100),
+    "Input power": RegisterInfo(12, INT16, UnitOfPower.WATT, 0.1), # could be either POWER_WATT or POWER_VOLT_AMPERE W was chosen
+    "Output voltage": RegisterInfo(15, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    "Output current": RegisterInfo(18, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Output frequency": RegisterInfo(21, INT16, FREQUENCY_HERTZ, 100),
+    "Active input current limit": RegisterInfo(22, INT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", True)),
+    "Output power": RegisterInfo(23, INT16, UnitOfPower.WATT, 0.1),
+    "Battery voltage": RegisterInfo(26, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    "Battery current": RegisterInfo(27, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Active input": RegisterInfo(register=29, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
+    "VE.Bus state of charge": RegisterInfo(30, UINT16, PERCENTAGE, 10, SliderWriteType()),
+    "VE.Bus state": RegisterInfo(register=31, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)), #This has no unit of measurement
+    "VE.Bus Error": RegisterInfo(register=32, dataType=UINT16, entityType=TextReadEntityType(vebus_error)), #This has no unit of measurement
+    "Switch Position": RegisterInfo(register=33, dataType=UINT16, entityType=SelectWriteType(vebus_mode)), #This has no unit of measurement
+    "Temperature alarm": RegisterInfo(register=34, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Low battery alarm": RegisterInfo(register=35, dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Overload alarm": RegisterInfo(register=36,dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "ESS power setpoint": RegisterInfo(register=37, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
+    "ESS disable charge flag phase": RegisterInfo(register=38, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "ESS disable feedback flag phase": RegisterInfo(39, UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Temperatur sensor alarm": RegisterInfo(register=42, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Voltage sensor alarm": RegisterInfo(register=43, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Temperature alarm": RegisterInfo(register=44, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Low battery alarm": RegisterInfo(register=45, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Overload alarm": RegisterInfo(register=46, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Ripple alarm": RegisterInfo(register=47, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Disable PV inverter": RegisterInfo(register=56, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "VE.Bus BMS allows battery to be charged": RegisterInfo(register=57, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS allows battery to be discharged": RegisterInfo(register=58, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS is expected": RegisterInfo(register=59, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS error": RegisterInfo(register=60, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "Battery temperature": RegisterInfo(61, INT16, UnitOfTemperature.CELSIUS, 10),
+    "VE.Bus Reset": RegisterInfo(register=62, dataType=UINT16, entityType=ButtonWriteType()), #This has no unit of measurement
+    "Grid lost alarm": RegisterInfo(register=64, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Feed DC overvoltage into grid": RegisterInfo(register=65, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Maximum overvoltage feed-in power": RegisterInfo(66, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
+    "AC input 1 ignored": RegisterInfo(register=69, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "AC input 2 ignored": RegisterInfo(register=70, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "AcPowerSetpoint acts as feed-in limit": RegisterInfo(register=71, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Solar offset voltage": RegisterInfo(register=72, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Sustain active": RegisterInfo(register=73, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "Energy from AC-In 1 to AC-out": RegisterInfo(74, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-In 1 to battery": RegisterInfo(76, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-In 2 to AC-out": RegisterInfo(78, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-In 2 to battery": RegisterInfo(80, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-out to AC-in 1 (reverse fed PV)": RegisterInfo(82, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-out to AC-in 2 (reverse fed PV)": RegisterInfo(84, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from battery to AC-in 1": RegisterInfo(86, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from battery to AC-in 2": RegisterInfo(88, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from battery to AC-out": RegisterInfo(90, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Energy from AC-out to battery (typically from PV-inverter)": RegisterInfo(92, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100)
 }
 
 battery_registers = {
@@ -574,22 +546,22 @@ class charger_mode(Enum):
 
 
 charger_registers = {
-    "charger_voltage_output_1": RegisterInfo(2307, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "charger_current_output_1": RegisterInfo(2308, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "charger_temperature": RegisterInfo(2309, INT16, UnitOfTemperature.CELSIUS, 10),
-    "charger_voltage_output_2": RegisterInfo(2310, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "charger_current_output_2": RegisterInfo(2311, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "charger_voltage_output_3": RegisterInfo(2312, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "charger_current_output_3": RegisterInfo(2313, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "charger_L1_current": RegisterInfo(2314, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "charger_L1_power": RegisterInfo(2315, UINT16, UnitOfPower.WATT),
-    "charger_current_limit": RegisterInfo(2316, INT16, ELECTRIC_CURRENT_AMPERE, 10, entityType=SliderWriteType("AC", True)),
-    "charger_mode": RegisterInfo(register=2317, dataType=UINT16, entityType=SelectWriteType(charger_mode)),
-    "charger_state": RegisterInfo(register=2318, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)),
-    "charger_errorcode": RegisterInfo(register=2319, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
-    "charger_relay": RegisterInfo(register=2320, dataType=UINT16, entityType=BoolReadEntityType()),
-    "charger_alarm_lowvoltage": RegisterInfo(register=2321, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "charger_alarm_highvoltage": RegisterInfo(register=2322, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
+    # "charger_voltage_output_1": RegisterInfo(2307, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "charger_current_output_1": RegisterInfo(2308, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "charger_temperature": RegisterInfo(2309, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "charger_voltage_output_2": RegisterInfo(2310, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "charger_current_output_2": RegisterInfo(2311, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "charger_voltage_output_3": RegisterInfo(2312, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "charger_current_output_3": RegisterInfo(2313, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "charger_L1_current": RegisterInfo(2314, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "charger_L1_power": RegisterInfo(2315, UINT16, UnitOfPower.WATT),
+    # "charger_current_limit": RegisterInfo(2316, INT16, ELECTRIC_CURRENT_AMPERE, 10, entityType=SliderWriteType("AC", True)),
+    # "charger_mode": RegisterInfo(register=2317, dataType=UINT16, entityType=SelectWriteType(charger_mode)),
+    # "charger_state": RegisterInfo(register=2318, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)),
+    # "charger_errorcode": RegisterInfo(register=2319, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
+    # "charger_relay": RegisterInfo(register=2320, dataType=UINT16, entityType=BoolReadEntityType()),
+    # "charger_alarm_lowvoltage": RegisterInfo(register=2321, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "charger_alarm_highvoltage": RegisterInfo(register=2322, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
 }
 
 settings_registers = {
@@ -665,18 +637,18 @@ class generic_status(Enum):
     UNKNOWN = 4
 
 tank_registers = {
-    "tank_productid": RegisterInfo(3000, UINT16),
-    "tank_capacity": RegisterInfo(3001, UINT32, UnitOfVolume.CUBIC_METERS, 10000),
-    "tank_fluidtype": RegisterInfo(register=3003, dataType=UINT16, entityType=TextReadEntityType(tank_fluidtype)),
-    "tank_level": RegisterInfo(3004, UINT16, PERCENTAGE, 10),
-    "tank_remaining": RegisterInfo(3005, UINT32, UnitOfVolume.CUBIC_METERS, 10000),
-    "tank_status": RegisterInfo(register=3007, dataType=UINT16, entityType=TextReadEntityType(generic_status))
+    # "tank_productid": RegisterInfo(3000, UINT16),
+    # "tank_capacity": RegisterInfo(3001, UINT32, UnitOfVolume.CUBIC_METERS, 10000),
+    # "tank_fluidtype": RegisterInfo(register=3003, dataType=UINT16, entityType=TextReadEntityType(tank_fluidtype)),
+    # "tank_level": RegisterInfo(3004, UINT16, PERCENTAGE, 10),
+    # "tank_remaining": RegisterInfo(3005, UINT32, UnitOfVolume.CUBIC_METERS, 10000),
+    # "tank_status": RegisterInfo(register=3007, dataType=UINT16, entityType=TextReadEntityType(generic_status))
 }
 
 inverter_output_registers = {
-    "inverter_output_L1_current": RegisterInfo(3100, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "inverter_output_L1_voltage": RegisterInfo(3101, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "inverter_output_L1_power": RegisterInfo(3102, INT16, UnitOfPower.WATT, 0.1),
+    # "inverter_output_L1_current": RegisterInfo(3100, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "inverter_output_L1_voltage": RegisterInfo(3101, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "inverter_output_L1_power": RegisterInfo(3102, INT16, UnitOfPower.WATT, 0.1),
 }
 
 inverter_battery_registers = {
@@ -892,20 +864,20 @@ class temperature_type(Enum):
     GENERIC = 2
 
 temperature_registers = {
-    "temperature_productid": RegisterInfo(3300, UINT16),
-    "temperature_scale": RegisterInfo(3301, UINT16, "", 100),
-    "temperature_offset": RegisterInfo(3302, INT16, "",100),
-    "temperature_type": RegisterInfo(register=3303, dataType=UINT16, entityType=TextReadEntityType(temperature_type)),
-    "temperature_temperature": RegisterInfo(3304, INT16, UnitOfTemperature.CELSIUS, 100),
-    "temperature_status": RegisterInfo(register=3305, dataType=UINT16, entityType=TextReadEntityType(generic_status)),
-    "temperature_humidity": RegisterInfo(3306, UINT16, PERCENTAGE, 10),
-    "temperature_batteryvoltage": RegisterInfo(3307, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "temperature_pressure": RegisterInfo(3308, UINT16, UnitOfPressure.HPA)
+    # "temperature_productid": RegisterInfo(3300, UINT16),
+    # "temperature_scale": RegisterInfo(3301, UINT16, "", 100),
+    # "temperature_offset": RegisterInfo(3302, INT16, "",100),
+    # "temperature_type": RegisterInfo(register=3303, dataType=UINT16, entityType=TextReadEntityType(temperature_type)),
+    # "temperature_temperature": RegisterInfo(3304, INT16, UnitOfTemperature.CELSIUS, 100),
+    # "temperature_status": RegisterInfo(register=3305, dataType=UINT16, entityType=TextReadEntityType(generic_status)),
+    # "temperature_humidity": RegisterInfo(3306, UINT16, PERCENTAGE, 10),
+    # "temperature_batteryvoltage": RegisterInfo(3307, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "temperature_pressure": RegisterInfo(3308, UINT16, UnitOfPressure.HPA)
 }
 
 pulsemeter_registers = {
-    "pulsemeter_aggregate": RegisterInfo(3400, UINT32, UnitOfVolume.CUBIC_METERS),
-    "pulsemeter_count": RegisterInfo(3402, UINT32)
+    # "pulsemeter_aggregate": RegisterInfo(3400, UINT32, UnitOfVolume.CUBIC_METERS),
+    # "pulsemeter_count": RegisterInfo(3402, UINT32)
 }
 
 class digitalinput_state(Enum):
@@ -932,10 +904,10 @@ class digitalinput_type(Enum):
     CO2_ALARM = 8
 
 digitalinput_registers = {
-    "digitalinput_count": RegisterInfo(3420, UINT32),
-    "digitalinput_state": RegisterInfo(register=3422, dataType=UINT16, entityType=TextReadEntityType(digitalinput_state)),
-    "digitalinput_alarm": RegisterInfo(register=3423, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "digitalinput_type": RegisterInfo(register=3424, dataType=UINT16, entityType=TextReadEntityType(digitalinput_type))
+    # "digitalinput_count": RegisterInfo(3420, UINT32),
+    # "digitalinput_state": RegisterInfo(register=3422, dataType=UINT16, entityType=TextReadEntityType(digitalinput_state)),
+    # "digitalinput_alarm": RegisterInfo(register=3423, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "digitalinput_type": RegisterInfo(register=3424, dataType=UINT16, entityType=TextReadEntityType(digitalinput_type))
 }
 
 class generator_runningbyconditioncode(Enum):
@@ -975,10 +947,10 @@ generator_registers = {
 
 #not processed yet
 meteo_registers = {
-    "meteo_irradiance": RegisterInfo(3600, UINT16, IRRADIATION_WATTS_PER_SQUARE_METER, 10),
-    "meteo_windspeed": RegisterInfo(3601, UINT16, UnitOfSpeed.METERS_PER_SECOND, 10),
-    "meteo_celltemperature": RegisterInfo(3602, INT16, UnitOfTemperature.CELSIUS, 10),
-    "meteo_externaltemperature": RegisterInfo(3603, INT16, UnitOfTemperature.CELSIUS, 10)
+    # "meteo_irradiance": RegisterInfo(3600, UINT16, IRRADIATION_WATTS_PER_SQUARE_METER, 10),
+    # "meteo_windspeed": RegisterInfo(3601, UINT16, UnitOfSpeed.METERS_PER_SECOND, 10),
+    # "meteo_celltemperature": RegisterInfo(3602, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "meteo_externaltemperature": RegisterInfo(3603, INT16, UnitOfTemperature.CELSIUS, 10)
 }
 
 evcharger_productid_registers = {
@@ -1027,19 +999,19 @@ evcharger_registers = {
 }
 
 acload_registers = {
-    "acload_L1_power": RegisterInfo(3900, UINT16, UnitOfPower.WATT),
-    # "acload_L2_power": RegisterInfo(3901, UINT16, UnitOfPower.WATT),
-    # "acload_L3_power": RegisterInfo(3902, UINT16, UnitOfPower.WATT),
-    "acload_serial": RegisterInfo(3903, STRING(7)),
-    "acload_L1_voltage": RegisterInfo(3910, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "acload_L1_current": RegisterInfo(3911, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "acload_L2_voltage": RegisterInfo(3912, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "acload_L2_current": RegisterInfo(3913, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "acload_L3_voltage": RegisterInfo(3914, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "acload_L3_current": RegisterInfo(3915, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "acload_L1_energy_forward": RegisterInfo(3916, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    # "acload_L2_energy_forward": RegisterInfo(3918, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    # "acload_L3_energy_forward": RegisterInfo(3920, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100)
+    # "acload_L1_power": RegisterInfo(3900, UINT16, UnitOfPower.WATT),
+    # # "acload_L2_power": RegisterInfo(3901, UINT16, UnitOfPower.WATT),
+    # # "acload_L3_power": RegisterInfo(3902, UINT16, UnitOfPower.WATT),
+    # "acload_serial": RegisterInfo(3903, STRING(7)),
+    # "acload_L1_voltage": RegisterInfo(3910, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "acload_L1_current": RegisterInfo(3911, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "acload_L2_voltage": RegisterInfo(3912, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "acload_L2_current": RegisterInfo(3913, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "acload_L3_voltage": RegisterInfo(3914, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "acload_L3_current": RegisterInfo(3915, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "acload_L1_energy_forward": RegisterInfo(3916, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # # "acload_L2_energy_forward": RegisterInfo(3918, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # # "acload_L3_energy_forward": RegisterInfo(3920, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100)
 }
 
 fuelcell_registers = {
@@ -1119,46 +1091,46 @@ alternator_registers = {
 }
 
 dcsource_registers = {
-    "dcsource_battery_voltage": RegisterInfo(4200, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcsource_battery_current": RegisterInfo(4201, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "dcsource_starter_voltage": RegisterInfo(4202, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcsource_temperature": RegisterInfo(4203, INT16, UnitOfTemperature.CELSIUS, 10),
-    "dcsource_history_energyout": RegisterInfo(4204, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "dcsource_alarm_lowvoltage": RegisterInfo(register=4206, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsource_alarm_highvoltage": RegisterInfo(register=4207, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsource_alarm_lowstartervoltage": RegisterInfo(register=4208, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsource_alarm_highstartervoltage": RegisterInfo(register=4209, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsource_alarm_lowtemperature": RegisterInfo(register=4210, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsource_alarm_hightemperature": RegisterInfo(register=4211, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_battery_voltage": RegisterInfo(4200, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcsource_battery_current": RegisterInfo(4201, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "dcsource_starter_voltage": RegisterInfo(4202, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcsource_temperature": RegisterInfo(4203, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "dcsource_history_energyout": RegisterInfo(4204, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "dcsource_alarm_lowvoltage": RegisterInfo(register=4206, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_alarm_highvoltage": RegisterInfo(register=4207, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_alarm_lowstartervoltage": RegisterInfo(register=4208, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_alarm_highstartervoltage": RegisterInfo(register=4209, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_alarm_lowtemperature": RegisterInfo(register=4210, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsource_alarm_hightemperature": RegisterInfo(register=4211, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
 }
 
 dcload_registers = {
-    "dcload_battery_voltage": RegisterInfo(4300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcload_battery_current": RegisterInfo(4301, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "dcload_starter_voltage": RegisterInfo(4302, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcload_temperature": RegisterInfo(4303, INT16, UnitOfTemperature.CELSIUS, 10),
-    "dcload_history_energyin": RegisterInfo(4304, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "dcload_alarm_lowvoltage": RegisterInfo(register=4306, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcload_alarm_highvoltage": RegisterInfo(register=4307, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcload_alarm_lowstartervoltage": RegisterInfo(register=4308, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcload_alarm_highstartervoltage": RegisterInfo(register=4309, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcload_alarm_lowtemperature": RegisterInfo(register=4310, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcload_alarm_hightemperature": RegisterInfo(register=4311, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
+    # "dcload_battery_voltage": RegisterInfo(4300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcload_battery_current": RegisterInfo(4301, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "dcload_starter_voltage": RegisterInfo(4302, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcload_temperature": RegisterInfo(4303, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "dcload_history_energyin": RegisterInfo(4304, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "dcload_alarm_lowvoltage": RegisterInfo(register=4306, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcload_alarm_highvoltage": RegisterInfo(register=4307, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcload_alarm_lowstartervoltage": RegisterInfo(register=4308, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcload_alarm_highstartervoltage": RegisterInfo(register=4309, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcload_alarm_lowtemperature": RegisterInfo(register=4310, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcload_alarm_hightemperature": RegisterInfo(register=4311, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
 }
 
 dcsystem_registers = {
-    "dcsystem_battery_voltage": RegisterInfo(4400, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcsystem_battery_current": RegisterInfo(4401, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "dcsystem_starter_voltage": RegisterInfo(4402, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "dcsystem_temperature": RegisterInfo(4403, INT16, UnitOfTemperature.CELSIUS, 10),
-    "dcsystem_history_energyout": RegisterInfo(4404, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "dcsystem_history_energyin": RegisterInfo(4406, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "dcsystem_alarm_lowvoltage": RegisterInfo(register=4408, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsystem_alarm_highvoltage": RegisterInfo(register=4409, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsystem_alarm_lowstartervoltage": RegisterInfo(register=4410, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsystem_alarm_highstartervoltage": RegisterInfo(register=4411, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsystem_alarm_lowtemperature": RegisterInfo(register=4412, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "dcsystem_alarm_hightemperature": RegisterInfo(register=4413, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
+    # "dcsystem_battery_voltage": RegisterInfo(4400, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcsystem_battery_current": RegisterInfo(4401, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "dcsystem_starter_voltage": RegisterInfo(4402, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "dcsystem_temperature": RegisterInfo(4403, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "dcsystem_history_energyout": RegisterInfo(4404, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "dcsystem_history_energyin": RegisterInfo(4406, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "dcsystem_alarm_lowvoltage": RegisterInfo(register=4408, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsystem_alarm_highvoltage": RegisterInfo(register=4409, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsystem_alarm_lowstartervoltage": RegisterInfo(register=4410, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsystem_alarm_highstartervoltage": RegisterInfo(register=4411, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsystem_alarm_lowtemperature": RegisterInfo(register=4412, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "dcsystem_alarm_hightemperature": RegisterInfo(register=4413, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
 }
 
 class multi_mode(Enum):
@@ -1174,95 +1146,95 @@ class multi_input_type(Enum):
     SHORE = 3
 
 multi_registers = {
-    "multi_input_L1_voltage": RegisterInfo(4500, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "multi_input_L2_voltage": RegisterInfo(4501, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "multi_input_L3_voltage": RegisterInfo(4502, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_input_L1_current": RegisterInfo(4503, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "multi_input_L2_current": RegisterInfo(4504, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "multi_input_L3_current": RegisterInfo(4505, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "multi_input_L1_power": RegisterInfo(4506, INT16, UnitOfPower.WATT, 0.1),
-    # "multi_input_L2_power": RegisterInfo(4507, INT16, UnitOfPower.WATT, 0.1),
-    # "multi_input_L3_power": RegisterInfo(4508, INT16, UnitOfPower.WATT, 0.1),
-    "multi_input_L1_frequency": RegisterInfo(4509, UINT16, FREQUENCY_HERTZ, 100),
-    "multi_output_L1_voltage": RegisterInfo(4510, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "multi_output_L2_voltage": RegisterInfo(4511, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    # "multi_output_L3_voltage": RegisterInfo(4512, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_output_L1_current": RegisterInfo(4513, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "multi_output_L2_current": RegisterInfo(4514, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "multi_output_L3_current": RegisterInfo(4515, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "multi_output_L1_power": RegisterInfo(4516, INT16, UnitOfPower.WATT, 0.1),
-    # "multi_output_L2_power": RegisterInfo(4517, INT16, UnitOfPower.WATT, 0.1),
-    # "multi_output_L3_power": RegisterInfo(4518, INT16, UnitOfPower.WATT, 0.1),
-    "multi_output_L1_frequency": RegisterInfo(4519, UINT16, FREQUENCY_HERTZ, 100),
-    "multi_input_1_type": RegisterInfo(register=4520, dataType=UINT16, entityType=TextReadEntityType(multi_input_type)),
-    "multi_input_2_type": RegisterInfo(register=4521, dataType=UINT16, entityType=TextReadEntityType(multi_input_type)),
-    "multi_input_1_currentlimit": RegisterInfo(4522, UINT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", False)),
-    "multi_input_2_currentlimit": RegisterInfo(4523, UINT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", False)),
-    "multi_numberofphases": RegisterInfo(4524, UINT16),
-    "multi_activein_activeinput": RegisterInfo(register=4525, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
-    "multi_battery_voltage": RegisterInfo(4526, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "multi_battery_current": RegisterInfo(4527, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "multi_battery_temperature": RegisterInfo(4528, INT16, UnitOfTemperature.CELSIUS, 10),
-    "multi_battery_soc": RegisterInfo(4529, UINT16, PERCENTAGE, 10),
-    "multi_state": RegisterInfo(register=4530, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)),
-    "multi_mode": RegisterInfo(register=4531, dataType=UINT16, entityType=SelectWriteType(multi_mode)),
-    "multi_alarm_hightemperature": RegisterInfo(register=4532, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_highvoltage": RegisterInfo(register=4533, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_highvoltageacout": RegisterInfo(register=4534, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_lowtemperature": RegisterInfo(register=4535, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_lowvoltage": RegisterInfo(register=4536, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_lowvoltageacout": RegisterInfo(register=4537, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_overload": RegisterInfo(register=4538, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_alarm_ripple": RegisterInfo(register=4539, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "multi_yield_pv_power": RegisterInfo(4540, UINT16, UnitOfPower.WATT),
-    "multi_yield_user": RegisterInfo(4541, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_relay": RegisterInfo(register=4542, dataType=UINT16, entityType=BoolReadEntityType()),
-    "multi_mppoperationmode": RegisterInfo(register=4543, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
-    "multi_pv_voltage": RegisterInfo(4544, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_errorcode": RegisterInfo(register=4545, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
-    "multi_energy_acin1toacout": RegisterInfo(4546, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_acin1toinverter": RegisterInfo(4548, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_acin2toacout": RegisterInfo(4550, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_acin2toinverter": RegisterInfo(4552, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_acouttoacin1": RegisterInfo(4554, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_acouttoacin2": RegisterInfo(4556, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_invertertoacin1": RegisterInfo(4558, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_invertertoacin2": RegisterInfo(4560, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_invertertoacout": RegisterInfo(4562, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_outtoinverter": RegisterInfo(4564, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_solartoacin1": RegisterInfo(4566, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_solartoacin2": RegisterInfo(4568, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_energy_solartoacout": RegisterInfo(4570, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "mutli_energy_solartobattery": RegisterInfo(4572, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "multi_history_yield_today": RegisterInfo(4574, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_maxpower_today": RegisterInfo(4575, UINT16, UnitOfPower.WATT),
-    "multi_history_yield_yesterday": RegisterInfo(4576, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_maxpower_yesterday": RegisterInfo(4577, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_0_yield_today": RegisterInfo(4578, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_1_yield_today": RegisterInfo(4579, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_2_yield_today": RegisterInfo(4580, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_3_yield_today": RegisterInfo(4581, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_0_yield_yesterday": RegisterInfo(4582, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_1_yield_yesterday": RegisterInfo(4583, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_2_yield_yesterday": RegisterInfo(4584, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_3_yield_yesterday": RegisterInfo(4585, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "multi_history_tracker_0_maxpower_today": RegisterInfo(4586, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_1_maxpower_today": RegisterInfo(4587, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_2_maxpower_today": RegisterInfo(4588, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_3_maxpower_today": RegisterInfo(4589, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_0_maxpower_yesterday": RegisterInfo(4590, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_1_maxpower_yesterday": RegisterInfo(4591, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_2_maxpower_yesterday": RegisterInfo(4592, UINT16, UnitOfPower.WATT),
-    "multi_history_tracker_3_maxpower_yesterday": RegisterInfo(4593, UINT16, UnitOfPower.WATT),
-    "multi_tracker_0_voltage": RegisterInfo(4594, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_tracker_1_voltage": RegisterInfo(4595, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_tracker_2_voltage": RegisterInfo(4596, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_tracker_3_voltage": RegisterInfo(4597, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "multi_tracker_0_power": RegisterInfo(4598, UINT16, UnitOfPower.WATT),
-    "multi_tracker_1_power": RegisterInfo(4599, UINT16, UnitOfPower.WATT),
-    "multi_tracker_2_power": RegisterInfo(4600, UINT16, UnitOfPower.WATT),
-    "multi_tracker_3_power": RegisterInfo(4601, UINT16, UnitOfPower.WATT),
-    "multi_alarm_lowsoc": RegisterInfo(register=4602, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
+    # "multi_input_L1_voltage": RegisterInfo(4500, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "multi_input_L2_voltage": RegisterInfo(4501, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "multi_input_L3_voltage": RegisterInfo(4502, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_input_L1_current": RegisterInfo(4503, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "multi_input_L2_current": RegisterInfo(4504, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "multi_input_L3_current": RegisterInfo(4505, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "multi_input_L1_power": RegisterInfo(4506, INT16, UnitOfPower.WATT, 0.1),
+    # # "multi_input_L2_power": RegisterInfo(4507, INT16, UnitOfPower.WATT, 0.1),
+    # # "multi_input_L3_power": RegisterInfo(4508, INT16, UnitOfPower.WATT, 0.1),
+    # "multi_input_L1_frequency": RegisterInfo(4509, UINT16, FREQUENCY_HERTZ, 100),
+    # "multi_output_L1_voltage": RegisterInfo(4510, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "multi_output_L2_voltage": RegisterInfo(4511, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # # "multi_output_L3_voltage": RegisterInfo(4512, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_output_L1_current": RegisterInfo(4513, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "multi_output_L2_current": RegisterInfo(4514, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # # "multi_output_L3_current": RegisterInfo(4515, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "multi_output_L1_power": RegisterInfo(4516, INT16, UnitOfPower.WATT, 0.1),
+    # # "multi_output_L2_power": RegisterInfo(4517, INT16, UnitOfPower.WATT, 0.1),
+    # # "multi_output_L3_power": RegisterInfo(4518, INT16, UnitOfPower.WATT, 0.1),
+    # "multi_output_L1_frequency": RegisterInfo(4519, UINT16, FREQUENCY_HERTZ, 100),
+    # "multi_input_1_type": RegisterInfo(register=4520, dataType=UINT16, entityType=TextReadEntityType(multi_input_type)),
+    # "multi_input_2_type": RegisterInfo(register=4521, dataType=UINT16, entityType=TextReadEntityType(multi_input_type)),
+    # "multi_input_1_currentlimit": RegisterInfo(4522, UINT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", False)),
+    # "multi_input_2_currentlimit": RegisterInfo(4523, UINT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", False)),
+    # "multi_numberofphases": RegisterInfo(4524, UINT16),
+    # "multi_activein_activeinput": RegisterInfo(register=4525, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
+    # "multi_battery_voltage": RegisterInfo(4526, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "multi_battery_current": RegisterInfo(4527, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "multi_battery_temperature": RegisterInfo(4528, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "multi_battery_soc": RegisterInfo(4529, UINT16, PERCENTAGE, 10),
+    # "multi_state": RegisterInfo(register=4530, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)),
+    # "multi_mode": RegisterInfo(register=4531, dataType=UINT16, entityType=SelectWriteType(multi_mode)),
+    # "multi_alarm_hightemperature": RegisterInfo(register=4532, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_highvoltage": RegisterInfo(register=4533, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_highvoltageacout": RegisterInfo(register=4534, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_lowtemperature": RegisterInfo(register=4535, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_lowvoltage": RegisterInfo(register=4536, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_lowvoltageacout": RegisterInfo(register=4537, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_overload": RegisterInfo(register=4538, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_alarm_ripple": RegisterInfo(register=4539, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "multi_yield_pv_power": RegisterInfo(4540, UINT16, UnitOfPower.WATT),
+    # "multi_yield_user": RegisterInfo(4541, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_relay": RegisterInfo(register=4542, dataType=UINT16, entityType=BoolReadEntityType()),
+    # "multi_mppoperationmode": RegisterInfo(register=4543, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
+    # "multi_pv_voltage": RegisterInfo(4544, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_errorcode": RegisterInfo(register=4545, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
+    # "multi_energy_acin1toacout": RegisterInfo(4546, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_acin1toinverter": RegisterInfo(4548, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_acin2toacout": RegisterInfo(4550, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_acin2toinverter": RegisterInfo(4552, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_acouttoacin1": RegisterInfo(4554, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_acouttoacin2": RegisterInfo(4556, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_invertertoacin1": RegisterInfo(4558, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_invertertoacin2": RegisterInfo(4560, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_invertertoacout": RegisterInfo(4562, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_outtoinverter": RegisterInfo(4564, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_solartoacin1": RegisterInfo(4566, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_solartoacin2": RegisterInfo(4568, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_energy_solartoacout": RegisterInfo(4570, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "mutli_energy_solartobattery": RegisterInfo(4572, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    # "multi_history_yield_today": RegisterInfo(4574, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_maxpower_today": RegisterInfo(4575, UINT16, UnitOfPower.WATT),
+    # "multi_history_yield_yesterday": RegisterInfo(4576, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_maxpower_yesterday": RegisterInfo(4577, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_0_yield_today": RegisterInfo(4578, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_1_yield_today": RegisterInfo(4579, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_2_yield_today": RegisterInfo(4580, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_3_yield_today": RegisterInfo(4581, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_0_yield_yesterday": RegisterInfo(4582, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_1_yield_yesterday": RegisterInfo(4583, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_2_yield_yesterday": RegisterInfo(4584, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_3_yield_yesterday": RegisterInfo(4585, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "multi_history_tracker_0_maxpower_today": RegisterInfo(4586, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_1_maxpower_today": RegisterInfo(4587, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_2_maxpower_today": RegisterInfo(4588, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_3_maxpower_today": RegisterInfo(4589, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_0_maxpower_yesterday": RegisterInfo(4590, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_1_maxpower_yesterday": RegisterInfo(4591, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_2_maxpower_yesterday": RegisterInfo(4592, UINT16, UnitOfPower.WATT),
+    # "multi_history_tracker_3_maxpower_yesterday": RegisterInfo(4593, UINT16, UnitOfPower.WATT),
+    # "multi_tracker_0_voltage": RegisterInfo(4594, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_tracker_1_voltage": RegisterInfo(4595, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_tracker_2_voltage": RegisterInfo(4596, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_tracker_3_voltage": RegisterInfo(4597, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    # "multi_tracker_0_power": RegisterInfo(4598, UINT16, UnitOfPower.WATT),
+    # "multi_tracker_1_power": RegisterInfo(4599, UINT16, UnitOfPower.WATT),
+    # "multi_tracker_2_power": RegisterInfo(4600, UINT16, UnitOfPower.WATT),
+    # "multi_tracker_3_power": RegisterInfo(4601, UINT16, UnitOfPower.WATT),
+    # "multi_alarm_lowsoc": RegisterInfo(register=4602, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
 
 }
 
@@ -1274,28 +1246,16 @@ class register_input_source(Enum):
     NOT_CONNECTED = 240
 
 system_registers = {
-    "Serial (System)": RegisterInfo(800, STRING(6)),
-    "CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
-    "CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
-    "system_pvonoutput_L1": RegisterInfo(808, UINT16, UnitOfPower.WATT),
-    # "system_pvonoutput_L2": RegisterInfo(809, UINT16, UnitOfPower.WATT),
-    # "system_pvonoutput_L3": RegisterInfo(810, UINT16, UnitOfPower.WATT),
-    "system_pvongrid_L1": RegisterInfo(811, UINT16, UnitOfPower.WATT),
-    # "system_pvongrid_L2": RegisterInfo(812, UINT16, UnitOfPower.WATT),
-    # "system_pvongrid_L3": RegisterInfo(813, UINT16, UnitOfPower.WATT),
-    "system_pvongenset_L1": RegisterInfo(814, UINT16, UnitOfPower.WATT),
-    # "system_pvongenset_L2": RegisterInfo(815, UINT16, UnitOfPower.WATT),
-    # "system_pvongenset_L3": RegisterInfo(816, UINT16, UnitOfPower.WATT),
-    "system_consumption_L1": RegisterInfo(817, UINT16, UnitOfPower.WATT),
-    # "system_consumption_L2": RegisterInfo(818, UINT16, UnitOfPower.WATT),
-    # "system_consumption_L3": RegisterInfo(819, UINT16, UnitOfPower.WATT),
-    "system_grid_L1": RegisterInfo(820, INT16, UnitOfPower.WATT),
-    # "system_grid_L2": RegisterInfo(821, INT16, UnitOfPower.WATT),
-    # "system_grid_L3": RegisterInfo(822, INT16, UnitOfPower.WATT),
-    "system_genset_L1": RegisterInfo(823, INT16, UnitOfPower.WATT),
-    # "system_genset_L2": RegisterInfo(824, INT16, UnitOfPower.WATT),
-    # "system_genset_L3": RegisterInfo(825, INT16, UnitOfPower.WATT),
-    "system_input_source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
+    "Victron Serial (System)": RegisterInfo(800, STRING(6)),
+    "Victron CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
+    "Victron CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
+    "Victron PV - AC-coupled on output": RegisterInfo(808, UINT16, UnitOfPower.WATT),
+    "Victron PV - AC-coupled on input": RegisterInfo(811, UINT16, UnitOfPower.WATT),
+    "Victron PV - AC-coupled on generator": RegisterInfo(814, UINT16, UnitOfPower.WATT),
+    "Victron AC Consumption": RegisterInfo(817, UINT16, UnitOfPower.WATT),
+    "Victron Grid": RegisterInfo(820, INT16, UnitOfPower.WATT),
+    "Victron Genset": RegisterInfo(823, INT16, UnitOfPower.WATT),
+    "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
 class system_battery_state(Enum):
@@ -1344,12 +1304,12 @@ register_info_dict = {
     # "solarcharger_tracker_registers": solarcharger_tracker_registers, 
     # "pvinverter_registers": pvinverter_registers, 
     # "motordrive_registers": motordrive_registers,
-    "charger_registers": charger_registers, 
-    "settings_registers": settings_registers,
+    # "charger_registers": charger_registers, 
+    # "settings_registers": settings_registers,
     # "gps_registers": gps_registers, 
     "settings_ess_registers": settings_ess_registers, 
     # "tank_registers": tank_registers, 
-    "inverter_output_registers": inverter_output_registers,
+    # "inverter_output_registers": inverter_output_registers,
     "inverter_battery_registers": inverter_battery_registers, 
     "inverter_alarm_registers": inverter_alarm_registers, 
     "inverter_info_registers": inverter_info_registers,
@@ -1357,20 +1317,20 @@ register_info_dict = {
     "inverter_tracker_registers": inverter_tracker_registers, 
     "inverter_tracker_statistics_registers": inverter_tracker_statistics_registers,
     "genset_registers": genset_registers, 
-    "temperature_registers": temperature_registers, 
-    "pulsemeter_registers": pulsemeter_registers, 
-    "digitalinput_registers": digitalinput_registers,
+    # "temperature_registers": temperature_registers, 
+    # "pulsemeter_registers": pulsemeter_registers, 
+    # "digitalinput_registers": digitalinput_registers,
     "generator_registers": generator_registers, 
-    "meteo_registers": meteo_registers,
+    # "meteo_registers": meteo_registers,
     # "evcharger_productid_registers": evcharger_productid_registers, 
     # "evcharger_registers": evcharger_registers,
-    "acload_registers": acload_registers, 
+    # "acload_registers": acload_registers, 
     # "fuelcell_registers": fuelcell_registers, 
     # "alternator_registers": alternator_registers, 
-    "dcsource_registers": dcsource_registers,
-    "dcload_registers": dcload_registers, 
-    "dcsystem_registers": dcsystem_registers, 
-    "multi_registers": multi_registers, 
+    # "dcsource_registers": dcsource_registers,
+    # "dcload_registers": dcload_registers, 
+    # "dcsystem_registers": dcsystem_registers, 
+    # "multi_registers": multi_registers, 
     "system_registers": system_registers,
     "system_battery_registers": system_battery_registers, 
     "system_dc_registers": system_dc_registers, 
