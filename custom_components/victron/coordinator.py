@@ -19,7 +19,7 @@ from .const import DOMAIN, UINT16, UINT32, INT16, INT32, STRING, RegisterInfo, r
 
 _LOGGER = logging.getLogger(__name__)
 
-class VictronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
+class victronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
     """Gather data for the energy device."""
 
     api: VictronHub
@@ -51,8 +51,8 @@ class VictronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self) -> dict:
         """Fetch all device and sensor data from api."""
         data = ""
-        """Get the latest data from Victron"""
-        self.logger.debug("Fetching Victron data")
+        """Get the latest data from victron"""
+        self.logger.debug("Fetching victron data")
         self.logger.debug(self.decodeInfo)
         
         parsed_data = OrderedDict()

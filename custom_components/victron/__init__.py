@@ -1,4 +1,4 @@
-"""The Victron integration."""
+"""The victron integration."""
 from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
@@ -6,13 +6,13 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN, CONF_HOST, CONF_PORT, SCAN_REGISTERS, CONF_INTERVAL, CONF_AC_SYSTEM_VOLTAGE, CONF_AC_CURRENT_LIMIT, CONF_DC_SYSTEM_VOLTAGE, CONF_DC_CURRENT_LIMIT
-from .coordinator import VictronEnergyDeviceUpdateCoordinator as Coordinator
+from .coordinator import victronEnergyDeviceUpdateCoordinator as Coordinator
 
 PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.SWITCH, Platform.NUMBER, Platform.SELECT, Platform.BINARY_SENSOR, Platform.BUTTON]
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
-    """Set up Victron from a config entry."""
+    """Set up victron from a config entry."""
 
     hass.data.setdefault(DOMAIN, {})
     # TODO 1. Create API instance

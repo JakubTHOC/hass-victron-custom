@@ -1,4 +1,4 @@
-"""Constants for the Victron integration."""
+"""Constants for the victron integration."""
 from enum import Enum
 from homeassistant.const import (
     PERCENTAGE,
@@ -26,7 +26,7 @@ class DeviceType(Enum):
     VEBUS = 4
 
 
-DOMAIN = "Victron"
+DOMAIN = "victron"
 
 CONF_HOST = "host"
 CONF_PORT = "port"
@@ -596,7 +596,7 @@ settings_registers = {
     "settings_ess_acpowersetpoint": RegisterInfo(register=2700, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
     "settings_ess_maxchargepercentage": RegisterInfo(register=2701, dataType=UINT16, unit=PERCENTAGE, entityType=SliderWriteType()),
     "settings_ess_maxdischargepercentage": RegisterInfo(register=2702, dataType=UINT16, unit=PERCENTAGE, entityType=SliderWriteType()),
-    "settings_ess_acpowersetpoint2": RegisterInfo(2703, INT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", True)), # NOTE: Duplicate register exposed by Victron 
+    "settings_ess_acpowersetpoint2": RegisterInfo(2703, INT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", True)), # NOTE: Duplicate register exposed by victron 
     "settings_ess_maxdischargepower": RegisterInfo(2704, UINT16, UnitOfPower.WATT, 0.1, SliderWriteType("DC", False), 50),
     "settings_ess_maxchargecurrent": RegisterInfo(register=2705, dataType=INT16, unit=ELECTRIC_CURRENT_AMPERE, entityType=SliderWriteType("DC", True)),
     "settings_ess_maxfeedinpower": RegisterInfo(2706, INT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", True)), 
@@ -707,7 +707,7 @@ inverter_info_registers = {
     "inverter_info_state": RegisterInfo(register=3128, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)),
 }
 
-#PV voltage is present here due to poor register id selection by Victron
+#PV voltage is present here due to poor register id selection by victron
 inverter_energy_registers = {
     "inverter_energy_invertertoacout": RegisterInfo(3130, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "inverter_energy_outtoinverter": RegisterInfo(3132, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
@@ -1084,7 +1084,7 @@ class alternator_errorcode(Enum):
     BATTERY_INSTANCE_OUT_OF_RANGE = 53
     TOO_MANY_BMSES = 54
     AEBUS_FAULT = 55
-    TOO_MANY_Victron_DEVICES = 56
+    TOO_MANY_VICTRON_DEVICES = 56
     BATTERY_REQUESTED_DISCONNECTION = 58
     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_1 = 59
     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_2 = 60

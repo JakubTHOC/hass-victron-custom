@@ -20,7 +20,7 @@ from homeassistant.helpers import event, entity
 
 from homeassistant.components.binary_sensor import BinarySensorEntityDescription, BinarySensorEntity, DOMAIN as BINARY_SENSOR_DOMAIN
 
-from .coordinator import VictronEnergyDeviceUpdateCoordinator
+from .coordinator import victronEnergyDeviceUpdateCoordinator
 from .base import VictronBaseEntityDescription
 from .const import DOMAIN, CONF_ADVANCED_OPTIONS, register_info_dict, BoolReadEntityType
 
@@ -34,12 +34,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up Victron energy binary sensor entries."""
     _LOGGER.debug("attempting to setup binary sensor entities")
-    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
-    _LOGGER.debug(Victron_coordinator.processed_data()["register_set"])
-    _LOGGER.debug(Victron_coordinator.processed_data()["data"])
+    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    _LOGGER.debug(victron_coordinator.processed_data()["register_set"])
+    _LOGGER.debug(victron_coordinator.processed_data()["data"])
     descriptions = []
     #TODO cleanup
-    register_set = Victron_coordinator.processed_data()["register_set"]
+    register_set = victron_coordinator.processed_data()["register_set"]
     for slave, registerLedger in register_set.items():
         for name in registerLedger:
             for register_name, registerInfo in register_info_dict[name].items():
@@ -59,7 +59,7 @@ async def async_setup_entry(
         entity = description
         entities.append(
             VictronBinarySensor(
-                Victron_coordinator,
+                victron_coordinator,
                 entity
                 ))
 
@@ -70,12 +70,12 @@ async def async_setup_entry(
 
 @dataclass
 class VictronEntityDescription(BinarySensorEntityDescription, VictronBaseEntityDescription):
-    """Describes Victron sensor entity."""
+    """Describes victron sensor entity."""
 
 class VictronBinarySensor(CoordinatorEntity, BinarySensorEntity):
     """A binary sensor implementation for Victron energy device."""
 
-    def __init__(self, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         """Initialize the binary sensor."""
         self.description: VictronEntityDescription = description
         #this needs to be changed to allow multiple of the same type

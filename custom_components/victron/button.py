@@ -15,7 +15,7 @@ from homeassistant.helpers import entity
 from homeassistant.components.button import ButtonEntityDescription, ButtonDeviceClass, ButtonEntity, DOMAIN as BUTTON_DOMAIN
 
 from .base import VictronWriteBaseEntityDescription
-from .coordinator import VictronEnergyDeviceUpdateCoordinator
+from .coordinator import victronEnergyDeviceUpdateCoordinator
 from .const import DOMAIN, CONF_ADVANCED_OPTIONS, register_info_dict, ButtonWriteType
 
 import logging
@@ -28,12 +28,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up Victron energy binary sensor entries."""
     _LOGGER.debug("attempting to setup button entities")
-    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
-    _LOGGER.debug(Victron_coordinator.processed_data()["register_set"])
-    _LOGGER.debug(Victron_coordinator.processed_data()["data"])
+    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    _LOGGER.debug(victron_coordinator.processed_data()["register_set"])
+    _LOGGER.debug(victron_coordinator.processed_data()["data"])
     descriptions = []
     #TODO cleanup
-    register_set = Victron_coordinator.processed_data()["register_set"]
+    register_set = victron_coordinator.processed_data()["register_set"]
     for slave, registerLedger in register_set.items():
         for name in registerLedger:
             for register_name, registerInfo in register_info_dict[name].items():
@@ -57,7 +57,7 @@ async def async_setup_entry(
         entity = description
         entities.append(
             VictronBinarySensor(
-                Victron_coordinator,
+                victron_coordinator,
                 entity
                 ))
 
@@ -67,13 +67,13 @@ async def async_setup_entry(
 
 @dataclass
 class VictronEntityDescription(ButtonEntityDescription, VictronWriteBaseEntityDescription):
-    """Describes Victron sensor entity."""
+    """Describes victron sensor entity."""
 
 
 class VictronBinarySensor(CoordinatorEntity, ButtonEntity):
     """A button implementation for Victron energy device."""
 
-    def __init__(self, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         """Initialize the sensor."""
         self.description: VictronEntityDescription = description
         self._attr_device_class = description.device_class

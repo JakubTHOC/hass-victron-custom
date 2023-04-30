@@ -16,7 +16,7 @@ The current state of this integration provides the following limitations regardi
 - This integration wasn't tested with a three phase system. Although basic functionality should work minor bugs could have gone unnoticed
 
 ## Important Note
-This integration was written an tested with the latest Victron firmware running.
+This integration was written an tested with the latest victron firmware running.
 GX version: v2.92
 Multiplus version: 492
 
@@ -69,27 +69,27 @@ This could cause issues if you are using specific configuration options of the b
 3. Restart home assistant
 4. goto "settings -> devices and services -> integration"
 5. click on "add integration"
-6. Search for "Victron"
+6. Search for "victron"
 7. Fill in the correct options and submit
 
 ## HACS
 
 ### Default
 1. Add the integration through this link: 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=sfstar&repository=hass-Victron&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=sfstar&repository=hass-victron&category=integration)
 3. Restart home assistant
 4. Setup integration via the integration page.
 
 # GX device errors
 The integration scans for available units and register ranges upon installation and when selected in the options menu.
-This will cause "errors" in the GX device under "settings -> services -> modbus TCP" due to not every register set and unit being available (and Victron not providing a discover unit / register to query)
+This will cause "errors" in the GX device under "settings -> services -> modbus TCP" due to not every register set and unit being available (and victron not providing a discover unit / register to query)
 These errors can be cleared without any issue and should not be reported unless (after scanning) errors keep getting reported.
 
 # Disclaimer
-This integration speaks to the Victron GX device.
+This integration speaks to the victron GX device.
 The GX device is an exposed integration point for a system capable of running on high voltages and currents.
 If the system were to become unstable it might lead to damage of equipment, fires and/or electrocution.
-Although this integration speaks to the (exposed by Victron) modbusTCP server it might cause the system to become unstable in circumstances like (but not limited to):
+Although this integration speaks to the (exposed by victron) modbusTCP server it might cause the system to become unstable in circumstances like (but not limited to):
 - High request frequency
 - (when implemented) writing to write_registers (for example changing the ess setpoint value)
 
@@ -102,11 +102,11 @@ Therefore the following applies to anyone using this code:
 The integration provides end users with the following configuration options.
 
 ## Host
-The IP address of the Victron GX device running the modbusTCP service.
+The IP address of the victron GX device running the modbusTCP service.
 It's only configureable during setup and it's recommended to make the GX device static in your router
 
 ## Port
-The port on which Victron exposes the modbusTCP service.
+The port on which victron exposes the modbusTCP service.
 Victron exposes the service on port 502, but this configuration option is present to allow for proxy configuration (via nginx etc).
 The average user doesn't need to change the port being used
 
@@ -146,4 +146,4 @@ This setting is used in combination with AC current to automatically calcultate 
 
 # Resources 
 The following links can be helpfull resources:
-- [setting up modbusTCP on the gx device](https://www.Victronenergy.com/live/ccgx:modbustcp_faq)
+- [setting up modbusTCP on the gx device](https://www.victronenergy.com/live/ccgx:modbustcp_faq)

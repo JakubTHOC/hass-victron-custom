@@ -1,4 +1,4 @@
-"""Config flow for Victron integration."""
+"""Config flow for victron integration."""
 from __future__ import annotations
 
 import logging
@@ -64,7 +64,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
         discovered_devices = await scan_connected_devices(hub=hub) 
         _LOGGER.debug("successfully discovered devices")  
     except:
-        _LOGGER.error("failed to connect to the Victron device") 
+        _LOGGER.error("failed to connect to the victron device") 
     return {
             "title": "Victron",
             "data": discovered_devices 
@@ -76,7 +76,7 @@ async def scan_connected_devices(hub: VictronHub) -> list:
 
 
 class VictronFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Victron."""
+    """Handle a config flow for victron."""
 
     VERSION = 1
 
@@ -113,7 +113,7 @@ class VictronFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         try:
             #not yet working
-            await self.async_set_unique_id("Victron")
+            await self.async_set_unique_id("victron")
             self._abort_if_unique_id_configured()
         except Exception as e:
             errors["base"] = "already_configured"
