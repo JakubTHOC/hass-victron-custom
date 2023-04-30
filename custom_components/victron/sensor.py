@@ -186,5 +186,5 @@ class VictronSensor(CoordinatorEntity, SensorEntity):
             },
             name=self.unique_id.split('_')[1],
             model=self.unique_id.split('_')[0],
-            manufacturer="victron", # to be dynamically set for gavazzi and redflow
+            manufacturer="Victron", # to be dynamically set for gavazzi and redflow
         )
