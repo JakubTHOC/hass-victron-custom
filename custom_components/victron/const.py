@@ -160,6 +160,18 @@ class vebus_error(Enum):
     FIRMWARE_INCOMPATIBILTIY = 25
     INTERNAL_ERROR = 26
 
+class vebus_charge_state(Enum):
+    INITIALIZING = 0
+    BULK = 1
+    ABSORBPTION = 2
+    FLOAT = 3
+    STORAGE = 4
+    ABSORBPTION_REPEAT = 5
+    FORCED_ABSORBPTION = 6
+    EQUALISE = 7
+    BULK_STOPPED = 8
+    UNKNOWN = 9
+
 vebus_registers = { 
     "Input voltage": RegisterInfo(3, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
     "Input current": RegisterInfo(6, INT16, ELECTRIC_CURRENT_AMPERE, 10),
@@ -213,166 +225,12 @@ vebus_registers = {
     "Energy from battery to AC-in 1": RegisterInfo(86, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from battery to AC-in 2": RegisterInfo(88, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from battery to AC-out": RegisterInfo(90, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    "Energy from AC-out to battery (typically from PV-inverter)": RegisterInfo(92, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100)
+    "Energy from AC-out to battery (typically from PV-inverter)": RegisterInfo(92, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
+    "Low cell voltage imminent": RegisterInfo(94, UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    "Charge state": RegisterInfo(95, UINT16, entityType=TextReadEntityType(vebus_charge_state))
 }
 
-battery_registers = {
-    "battery_voltage": RegisterInfo(259, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_starter_voltage": RegisterInfo(260, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_current": RegisterInfo(261, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "battery_temperature": RegisterInfo(262, INT16, UnitOfTemperature.CELSIUS, 10),
-    "battery_midvoltage": RegisterInfo(263, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_midvoltagedeviation": RegisterInfo(264, UINT16, PERCENTAGE, 100),
-    "battery_consumedamphours": RegisterInfo(265, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
-    "battery_soc": RegisterInfo(266, UINT16, PERCENTAGE, 10),
-    "battery_alarm": RegisterInfo(register=267, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowvoltage": RegisterInfo(register=268, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highvoltage": RegisterInfo(register=269, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowstartervoltage": RegisterInfo(register=270, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highstartervoltage": RegisterInfo(register=271, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowsoc": RegisterInfo(register=272, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowtemperature": RegisterInfo(register=273, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_hightemperature": RegisterInfo(register=274, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_midvoltage": RegisterInfo(register=275, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowfusedvoltage": RegisterInfo(register=276, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highfusedvoltage": RegisterInfo(register=277, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_fuseblown": RegisterInfo(register=278, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highinternaltemperature": RegisterInfo(register=279, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_relay": RegisterInfo(register=280, dataType=UINT16, entityType=SwitchWriteType()),
-    "battery_history_deepestdischarge": RegisterInfo(281, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
-    "battery_history_lastdischarge": RegisterInfo(282, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
-    "battery_history_averagedischarge": RegisterInfo(283, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
-    "battery_history_chargecycles": RegisterInfo(284, UINT16),
-    "battery_history_fulldischarges": RegisterInfo(285, UINT16),
-    "battery_history_totalahdrawn": RegisterInfo(286, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
-    "battery_history_minimumvoltage": RegisterInfo(287, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_maximumvoltage": RegisterInfo(288, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_timesincelastfullcharge": RegisterInfo(289, UINT16, TIME_SECONDS, 0.01),
-    "battery_history_automaticsyncs": RegisterInfo(290, UINT16),
-    "battery_history_lowvoltagealarms": RegisterInfo(291, UINT16),
-    "battery_history_highvoltagealarms": RegisterInfo(292, UINT16),
-    "battery_history_lowstartervoltagealarms": RegisterInfo(293, UINT16),
-    "battery_history_highstartervoltagealarms": RegisterInfo(294, UINT16),
-    "battery_history_minimumstartervoltage": RegisterInfo(295, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_maximumstartervoltage": RegisterInfo(296, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_lowfusedvoltagealarms": RegisterInfo(297, UINT16),
-    "battery_history_highfusedvoltagealarms": RegisterInfo(298, UINT16),
-    "battery_history_minimumfusedvoltage": RegisterInfo(299, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_maximumfusedvoltage": RegisterInfo(300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_dischargedenergy": RegisterInfo(301, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "battery_history_chargedenergy": RegisterInfo(302, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "battery_timetogo": RegisterInfo(303, UINT16, TIME_SECONDS, 0.01),
-    "battery_soh": RegisterInfo(304, UINT16, PERCENTAGE, 10),
-    "battery_info_maxchargevoltage": RegisterInfo(305, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "battery_info_batterylowvoltage": RegisterInfo(306, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "battery_info_maxchargecurrent": RegisterInfo(307, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "battery_info_maxdischargecurrent": RegisterInfo(308, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "battery_capacity": RegisterInfo(309, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "battery_diagnostics_lasterror_1_time": RegisterInfo(310, INT32, "timestamp"),
-    "battery_diagnostics_lasterror_2_time": RegisterInfo(312, INT32, "timestamp"),
-    "battery_diagnostics_lasterror_3_time": RegisterInfo(314, INT32, "timestamp"),
-    "battery_diagnostics_lasterror_4_time": RegisterInfo(316, INT32, "timestamp"),
-    "battery_system_mincelltemperature": RegisterInfo(318, INT16, UnitOfTemperature.CELSIUS, 10),
-    "battery_system_maxcelltemperature": RegisterInfo(319, INT16, UnitOfTemperature.CELSIUS, 10),
-    "battery_alarm_higchargecurrent": RegisterInfo(register=320, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highdischargecurrent": RegisterInfo(register=321, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_cellimbalance": RegisterInfo(register=322, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_internalfailure": RegisterInfo(register=323, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_highchargetemperature": RegisterInfo(register=324, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowchargetemperature": RegisterInfo(register=325, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "battery_alarm_lowcellvoltage": RegisterInfo(register=326, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger))
-}
-
-class battery_state(Enum):
-    WAIT_START_INIT = 0
-    BEFORE_BOOT_INIT = 1
-    BEFORE_BOOT_DELAY_INIT = 2
-    WAIT_BOOT_INIT = 3
-    INITIALIZING = 4
-    BATTERY_VOLTAGE_MEASURE_INIT = 5
-    BATTERY_CALCULATE_VOLTAGE_INIT = 6
-    WAIT_BUS_VOLTAGE_INIT = 7
-    WAIT_LYNX_SHUNT_INIT = 8
-    RUNNING = 9
-    ERROR = 10
-    UNUSED = 11
-    SHUTDOWN = 12
-    SLAVE_UPDATING = 13
-    STANDBY = 14
-    GOING_TO_RUN = 15
-    PRE_CHARGING = 16
-
-class battery_error(Enum):
-    NONE = 0
-    BATTERY_INIT_ERROR = 1
-    NO_BATTERIES_CONNECTED = 2
-    UNKNOWN_BATTERY_CONNECTED = 3
-    DIFFERENT_BATTERY_TYPE = 4
-    NUMBER_OF_BATTERIES_INCORRECT = 5
-    LYNX_SHUNT_NOT_FOUND = 6
-    BATTERY_MEASURE_ERROR = 7
-    INTERNAL_CALCULATION_ERROR = 8
-    BATTERIES_IN_SERIES_NOT_OK = 9
-    NUMBER_OF_BATTERIES_INCORRECT_DUPLICATE_1 = 10
-    HARDWARE_ERROR = 11
-    WATCHDOG_ERROR = 12
-    OVER_VOLTAGE = 13
-    UNDER_VOLTAGE = 14
-    OVER_TEMPERATURE = 15
-    UNDER_TEMPERATURE = 16
-    HARDWARE_FAULT = 17
-    STANDBY_SHUTDOWN = 18
-    PRE_CHARGE_CHARGE_ERROR = 19
-    SAFETY_CONTACTOR_CHECK_ERROR = 20
-    PRE_CHARGE_DISCHARGE_ERROR = 21
-    ADC_ERROR = 22
-    SLAVE_ERROR = 23
-    SLAVE_WARNING = 24
-    PRE_CHARGE_ERROR = 25
-    SAFETY_CONTACTOR_ERROR = 26
-    OVER_CURRENT = 27
-    SLAVE_UPDATE_FAILED = 28
-    SLAVE_UPDATE_UNAVAILABLE = 29
-    CALIBRATION_DATA_LOST = 30
-    SETTINGS_INVALID = 31
-    BMS_CABLE = 32
-    REFERENCE_FAILURE = 33
-    WRONG_SYSTEM_VOLTAGE = 34
-    PRE_CHARGE_TIMEOUT = 35
-
-
-
-battery_detail_registers = {
-    "battery_state": RegisterInfo(register=1282, dataType=UINT16, entityType=TextReadEntityType(battery_state)),
-    "battery_error": RegisterInfo(register=1283, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
-    "battery_system_switch": RegisterInfo(register=1284, dataType=UINT16, entityType=BoolReadEntityType()),
-    "battery_balancing": RegisterInfo(register=1285, dataType=UINT16, entityType=BoolReadEntityType()),
-    "battery_system_numberofbatteries": RegisterInfo(1286, UINT16),
-    "battery_system_batteriesparallel": RegisterInfo(1287, UINT16),
-    "battery_system_batteriesseries": RegisterInfo(1288, UINT16),
-    "battery_system_numberofcellsperbattery": RegisterInfo(1289, UINT16),
-    "battery_system_mincellvoltage": RegisterInfo(1290, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_system_maxcellvoltage": RegisterInfo(1291, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_diagnostics_shutdownsdueerror": RegisterInfo(1292, UINT16),
-    "battery_diagnostics_lasterror_1": RegisterInfo(register=1293, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
-    "battery_diagnostics_lasterror_2": RegisterInfo(register=1294, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
-    "battery_diagnostics_lasterror_3": RegisterInfo(register=1295, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
-    "battery_diagnostics_lasterror_4": RegisterInfo(register=1296, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
-    "battery_io_allowtocharge": RegisterInfo(register=1297, dataType=UINT16, entityType=BoolReadEntityType()),
-    "battery_io_allowtodischarge": RegisterInfo(register=1298, dataType=UINT16, entityType=BoolReadEntityType()),
-    "battery_io_externalrelay": RegisterInfo(register=1299, dataType=UINT16, entityType=BoolReadEntityType()),
-    "battery_history_minimumcellvoltage": RegisterInfo(1300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_history_maximumcellvoltage": RegisterInfo(1301, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "battery_system_numberofmodulesoffline": RegisterInfo(1302, UINT16),
-    "battery_system_numberofmodulesonline": RegisterInfo(1303, UINT16),
-    "battery_system_numberofmodulesblockingcharge": RegisterInfo(1304, UINT16),
-    "battery_system_numberofmodulesblockingdischarge": RegisterInfo(1305, UINT16),
-    "battery_system_minvoltagecellid": RegisterInfo(1306, STRING(4)),
-    "battery_system_maxvoltagecellid": RegisterInfo(1310, STRING(4)),
-    "battery_system_mintemperaturecellid": RegisterInfo(1314, STRING(4)),
-    "battery_system_maxtemperaturecellid": RegisterInfo(1318, STRING(4))
-}
-
+# 
 class solarcharger_mode(Enum):
     ON = 1
     OFF = 4
@@ -420,85 +278,37 @@ class generic_mppoperationmode(Enum):
     UNAVAILABLE = 255
 
 solarcharger_registers = {
-    "solarcharger_battery_voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "solarcharger_battery_current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "solarcharger_battery_temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
-    "solarcharger_mode": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
-    "solarcharger_state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
-    "solarcharger_pv_voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "solarcharger_pv_current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "solarcharger_equallization_pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
-    "solarcharger_equalization_time_remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
-    "solarcharger_relay": RegisterInfo(register=780, dataType=UINT16, entityType=BoolReadEntityType()),
-    "solarcharger_alarm": RegisterInfo(register=781, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "solarcharger_alarm_lowvoltage": RegisterInfo(register=782, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "solarcharger_alarm_highvoltage": RegisterInfo(register=783, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "solarcharger_yield_today": RegisterInfo(784, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_maxpower_today": RegisterInfo(785, UINT16, UnitOfPower.WATT),
-    "solarcharger_yield_yesterday": RegisterInfo(786, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_maxpower_yesterday": RegisterInfo(787, UINT16, UnitOfPower.WATT),
-    "solarcharger_errorcode": RegisterInfo(register=788, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
-    "solarcharger_yield_power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
-    "solarcharger_yield_user": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_mppoperationmode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode))
+    "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
+    "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
+    "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
+    "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
+    "Equalization time remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
+    "Relay on the charger": RegisterInfo(register=780, dataType=UINT16, entityType=BoolReadEntityType()),
+    "Solarcharger Alarm": RegisterInfo(register=781, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    "Low batt. voltage alarm": RegisterInfo(register=782, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    "High batt. voltage alarm": RegisterInfo(register=783, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    "Yield today": RegisterInfo(784, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    "Maximum charge power today": RegisterInfo(785, UINT16, UnitOfPower.WATT),
+    "Yield yesterday": RegisterInfo(786, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    "Maximum charge power yesterday": RegisterInfo(787, UINT16, UnitOfPower.WATT),
+    "Error code": RegisterInfo(register=788, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
+    "PV power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
+    "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
+    "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
+    "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
+
 }
-
-solarcharger_tracker_voltage_registers = {
-    "solarcharger_tracker_0_voltage": RegisterInfo(3700, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "solarcharger_tracker_1_voltage": RegisterInfo(3701, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "solarcharger_tracker_2_voltage": RegisterInfo(3702, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "solarcharger_tracker_3_voltage": RegisterInfo(3703, UINT16, ELECTRIC_POTENTIAL_VOLT, 100)
-}
-
-solarcharger_tracker_registers = {
-    "solarcharger_tracker_0_yield_today": RegisterInfo(3708, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_1_yield_today": RegisterInfo(3709, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_2_yield_today": RegisterInfo(3710, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_3_yield_today": RegisterInfo(3711, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_0_yield_yesterday": RegisterInfo(3712, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_1_yield_yesterday": RegisterInfo(3713, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_2_yield_yesterday": RegisterInfo(3714, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_3_yield_yesterday": RegisterInfo(3715, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "solarcharger_tracker_0_maxpower_today": RegisterInfo(3716, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_1_maxpower_today": RegisterInfo(3717, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_2_maxpower_today": RegisterInfo(3718, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_3_maxpower_today": RegisterInfo(3719, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_0_maxpower_yesterday": RegisterInfo(3720, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_1_maxpower_yesterday": RegisterInfo(3721, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_2_maxpower_yesterday": RegisterInfo(3722, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_3_maxpower_yesterday": RegisterInfo(3723, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_0_pv_power": RegisterInfo(3724, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_1_pv_power": RegisterInfo(3725, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_2_pv_power": RegisterInfo(3726, UINT16, UnitOfPower.WATT),
-    "solarcharger_tracker_3_pv_power": RegisterInfo(3727, UINT16, UnitOfPower.WATT),    
-}
-
-class generic_position(Enum):
-    AC_INPUT_1 = 0
-    AC_OUTPUT = 1
-    AC_INPUT_2 = 2
-
 
 class charger_mode(Enum):
     OFF = 0
     ON = 1
     ERROR = 2
     UNAVAILABLE = 3
-
-class ess_batterylife_state(Enum):
-    BL_DISABLED_DUPLICATE_1 = 0
-    RESTARTING = 1
-    SELF_CONSUMPTION = 2
-    SELF_CONSUMPTION_DUPLICATE_1 = 3
-    SELF_CONSUMPTION_DUPLICATE_2 = 4
-    DISCHARGE_DISABLED = 5
-    FORCE_CHARGE = 6
-    SUSTAIN = 7
-    LOW_SOC_RECHARGE = 8
-    KEEP_BATTERIES_CHARGED = 9
-    BL_DISABLED = 10
-    BL_DISABLED_LOW_SOC = 11
-    BL_DISABLED_LOC_SOC_RECHARGE = 12
 
 class ess_mode(Enum):
     ESS_PHASE_COMPENSATION = 1
@@ -511,249 +321,6 @@ class generic_status(Enum):
     SHORT_CIRCUITED = 2
     REVERSE_POLARITY = 3
     UNKNOWN = 4
-
-class genset_status(Enum):
-    STANDBY = 0
-    STARTUP_1 = 1
-    STARTUP_2 = 2
-    STARTUP_3 = 3
-    STARTUP_4 = 4
-    STARTUP_5 = 5
-    STARTUP_6 = 6
-    STARTUP_7 = 7
-    RUNNING = 8
-    STOPPING = 9
-    ERROR = 10
-
-class genset_errorcode(Enum):
-    NONE = 0
-    AC_L1_VOLTAGE_TOO_LOW = 1
-    AC_L1_FREQUENCY_TOO_LOW = 2
-    AC_L1_CURRENT_TOO_LOW = 3
-    AC_L1_POWER_TOO_LOW = 4
-    EMERGENCY_STOP = 5
-    SERVO_CURRENT_TOO_LOW = 6
-    OIL_PRESSURE_TOO_LOW = 7
-    ENGINE_TEMPERATURE_TOO_LOW = 8
-    WINDING_TEMPERATURE_TOO_LOW = 9
-    EXHAUST_TEMPERATURE_TOO_LOW = 10
-    STARTER_CURRENT_TOO_LOW = 13
-    GLOW_CURRENT_TOO_LOW = 14
-    GLOW_CURRENT_TOO_LOW_DUPLICATE_1 = 15
-    FUEL_HOLDING_MAGNET_CURRENT_TOO_LOW = 16
-    STOP_SOLENOID_HOLD_COIL_CURRENT_TOO_LOW = 17
-    STOP_SOLENOID_PULL_COIL_CURRENT_TOO_LOW = 18
-    OPTIONAL_DC_OUT_CURRENT_TOO_LOW = 19
-    OUTPUT_5V_VOLTAGE_TOO_LOW = 20
-    BOOST_OUTPUT_CURRENT_TOO_LOW = 21
-    PANEL_SUPPLY_CURRENT_TOO_HIGH = 22
-    STARTER_BATTERY_VOLTAGE_TOO_LOW = 25
-    ROTATION_TOO_LOW_STARTUP_ABORTED = 26
-    ROTATION_TOO_LOW = 28
-    POWER_CONTACTER_CURRENT_TOO_LOW = 29
-    # AC_L2_VOLTAGE_TOO_LOW = 30
-    # AC_L2_FREQUENCY_TOO_LOW = 31
-    # AC_L2_CURRENT_TOO_LOW = 32
-    # AC_L2_POWER_TOO_LOW = 33
-    # AC_L3_VOLTAGE_TOO_LOW = 34
-    # AC_L3_FREQUENCY_TOO_LOW = 35
-    # AC_L3_CURRENT_TOO_LOW = 36
-    # AC_L3_POWER_TOO_LOW = 37
-    FUEL_TEMPERATURE_TOO_LOW = 62
-    FUEL_LEVEL_TOO_LOW = 63
-    AC_L1_VOLTAGE_TOO_HIGH = 65
-    AC_L1_FREQUENCY_TOO_HIGH = 66
-    AC_L1_CURRENT_TOO_HIGH = 67
-    AC_L1_POWER_TOO_HIGH = 68
-    SERVO_CURRENT_TOO_HIGH = 70
-    OIL_PRESSURE_TOO_HIGH = 71
-    ENGINE_TEMPERATURE_TOO_HIGH = 72
-    WINDING_TEMPERATURE_TOO_HIGH = 73
-    EXHAUST_TEMPERATURE_TOO_HIGH = 74 #NOTE modbustcp spec says it should be too low but that is already specified in the low grouping therefore assuming this state is used for HIGH temp
-    STARTER_CURRENT_TOO_HIGH = 77 #NOTE same as 74 applies here
-    GLOW_CURRENT_TOO_HIGH = 78
-    GLOW_CURRENT_TOO_HIGH_DUPLICATE_1 = 79
-    FUEL_HOLDING_MAGNET_CURRENT_TOO_HIGH = 80
-    STOP_SOLENOID_HOLD_COIL_CURRENT_TOO_HIGH = 81
-    STOP_SOLENOID_PULL_COIL_CURRENT_TOO_HIGH = 82
-    OPTIONAL_DC_OUT_CURRENT_TOO_HIGH  = 83
-    OUTPUT_5V_TOO_HIGH = 84
-    BOOST_OUTPUT_CURRENT_TOO_HIGH = 85
-    STARTER_BATTERY_VOLTAGE_TOO_HIGH = 89
-    ROTATION_TOO_HIGH_STARTUP_ABORTED = 90
-    ROTATION_TOO_HIGH = 92
-    POWER_CONTACTER_CURRENT_TOO_HIGH  = 93
-    # AC_L2_VOLTAGE_TOO_HIGH = 94
-    # AC_L2_FREQUENCY_TOO_HIGH = 95
-    # AC_L2_CURRENT_TOO_HIGH = 96
-    # AC_L2_POWER_TOO_HIGH = 97
-    # AC_L3_VOLTAGE_TOO_HIGH = 98
-    # AC_L3_FREQUENCY_TOO_HIGH = 99
-    # AC_L3_CURRENT_TOO_HIGH = 100
-    # AC_L3_POWER_TOO_HIGH = 101
-    FUEL_TEMPERATURE_TOO_HIGH = 126
-    FUEL_LEVEL_TOO_HIGH = 127
-    LOST_CONTROL_UNIT = 130
-    LOST_PANEL = 131
-    SERVICE_NEEDED = 132
-    LOST_THREE_PHASE_MODULE = 133
-    LOST_AGT_MODULE = 134
-    SYNCHRONIZATION_FAILURE = 135
-    INTAKE_AIRFILTER = 137
-    LOST_SYNC_MODULE = 139
-    LOAD_BALANCE_FAILED = 140
-    SYNC_MODE_DEACTIVATED  = 141
-    ENGINE_CONTROLLER = 142
-    ROTATING_FIELD_WRONG = 148
-    FUEL_LEVEL_SENSOR_LOST = 149
-    INIT_FAILED = 150
-    WATCHDOG = 151
-    OUTAGE_WINDING = 152
-    OUTAGE_EXHAUST = 153
-    OUTAGE_CYCLE_HEAD = 154
-    INVERTER_OVER_TEMPERATURE = 155
-    INVERTER_OVERLOAD = 156
-    INVERTER_COMMMUNICATION_LOST  = 157
-    INVERTER_SYNC_FAILED = 158
-    CAN_COMMUNICATION_LOST = 159
-    L1_OVERLOAD = 160
-    # L2_OVERLOAD = 161
-    # L3_OVERLOAD = 162
-    DC_OVERLOAD = 163
-    DC_OVERVOLTAGE = 164
-    EMERGENCY_STOP_DUPLICATE_1 = 165
-    NO_CONNECTION = 166
-
-
-class temperature_type(Enum):
-    BATTERY = 0
-    FRIDGE = 1
-    GENERIC = 2
-
-
-# class digitalinput_state(Enum):
-#     LOW = 0
-#     HIGH = 1
-#     OFF = 2
-#     ON = 3
-#     NO = 4
-#     YES = 5
-#     OPEN = 6
-#     CLOSED = 7
-#     ALARM = 8
-#     OK = 9
-#     RUNNING = 10
-#     STOPPED = 11
-
-# class digitalinput_type(Enum):
-#     DOOR = 2
-#     BILGE_PUMP = 3
-#     BILGE_ALARM = 4
-#     BURGLAR_ALARM = 5
-#     SMOKE_ALARM = 6
-#     FIRE_ALARM = 7
-#     CO2_ALARM = 8
-
-# class generator_runningbyconditioncode(Enum):
-#     STOPPED = 0
-#     MANUAL = 1
-#     TEST_RUN = 2
-#     LOSS_OF_COMMS = 3
-#     SOC = 4
-#     AC_LOAD = 5
-#     BATTERY_CURRENT = 6
-#     BATTERY_VOLTAGE = 7
-#     INVERTER_TEMPERATURE = 8
-#     INVERTER_OVERLOAD = 9
-#     STOP_ON_AC1 = 10
-
-# class generator_state(Enum):
-#     STOPPED = 0
-#     RUNNING = 1
-#     ERROR = 10
-
-# class generator_error(Enum):
-#     NONE = 0
-#     REMOTE_DISABLED = 1
-#     REMOTE_FAULT = 2
-
-# class evcharger_mode(Enum):
-#     AC_INPUT_1 = 0
-#     AC_OUTPUT = 1
-#     AC_INPUT_2 = 2
-
-# class evcharger_status(Enum):
-#     DISCONNECTED = 0
-#     CONNECTED = 1
-#     CHARGING = 2
-#     CHARGED = 3
-#     WAITING_FOR_SUN = 4
-#     WAITING_FOR_RFID = 5
-#     WAITING_FOR_START = 6
-#     LOW_SOC = 7
-#     GROUND_FAULT = 8
-#     WELDED_CONTACTS = 9
-#     CP_INPUT_SHORTED = 10
-#     RESIDUAL_CURRENT_DETECTED = 11
-#     UNDER_VOLTAGE_DETECTED = 12
-#     OVERVOLTAGE_DETECTED = 13
-#     OVERHEATING_DETECTED = 14
-
-# class alternator_state(Enum):
-#     OFF = 0
-#     FAULT = 2
-#     BULK = 3
-#     ABSORPTION = 4
-#     FLOAT = 5
-#     STORAGE = 6
-#     EQUALIZE = 7
-#     EXTERNAL_CONTROL = 252
-
-# class alternator_errorcode(Enum):
-#     HIGH_BATTERY_TEMPERATURE = 12
-#     HIGH_BATTERY_VOLTAGE = 13
-#     LOW_BATTERY_VOLTAGE = 14
-#     VBAT_EXCEEDS_CPB = 15
-#     HIGH_ALTERNATOR_TEMPERATURE = 21
-#     ALTERNATOR_OVERSPEED = 22
-#     INTERNAL_ERROR = 24
-#     HIGH_FIELD_FET_TEMPERATURE  = 41
-#     SENSOR_MISSING = 42
-#     LOW_VALT = 43
-#     HIGH_VOLTAGE_OFFSET = 44
-#     VALT_EXCEEDS_CPB = 45
-#     BATTERY_DISCONNECT_REQUEST = 51
-#     BATTERY_DISCONNECT_REQUEST_DUPLICATE_1 = 52
-#     BATTERY_INSTANCE_OUT_OF_RANGE = 53
-#     TOO_MANY_BMSES = 54
-#     AEBUS_FAULT = 55
-#     TOO_MANY_Victron_DEVICES = 56
-#     BATTERY_REQUESTED_DISCONNECTION = 58
-#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_1 = 59
-#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_2 = 60
-#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_3 = 61
-#     BMS_LOST = 91
-#     FORCED_IDLE = 92
-#     DCDC_CONVERTER_FAIL = 201
-#     DCDC_ERROR = 202
-#     DCDC_ERROR_DUPLICATE_1 = 203
-#     DCDC_ERROR_DUPLICATE_2 = 204
-#     DCDC_ERROR_DUPLICATE_3 = 205
-#     DCDC_ERROR_DUPLICATE_4 = 206
-#     DCDC_ERROR_DUPLICATE_5 = 207
-
-# class multi_mode(Enum):
-#     CHARGER = 1
-#     INVERTER = 2
-#     ON = 3
-#     OFF = 4
-
-# class multi_input_type(Enum):
-#     UNUSED = 0
-#     GRID = 1
-#     GENSET = 2
-#     SHORE = 3
-
 
 class register_input_source(Enum):
     UNKNOWN = 0
@@ -775,55 +342,39 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-class system_battery_state(Enum):
-    IDLE = 0
-    CHARGING = 1
-    DISCHARGING = 2
-
-system_battery_registers = {
-    "system_battery_voltage": RegisterInfo(840, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
-    "system_battery_current": RegisterInfo(841, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "system_battery_power": RegisterInfo(842, INT16, UnitOfPower.WATT),
-    "system_battery_soc": RegisterInfo(843, UINT16, PERCENTAGE),
-    "system_battery_state": RegisterInfo(register=844, dataType=UINT16, entityType=TextReadEntityType(system_battery_state)),
-    "system_battery_amphours": RegisterInfo(845, UINT16, ELECTRIC_CURRENT_AMPERE, -10), #  NOTE should be amp hours
-    "system_battery_time_to_go": RegisterInfo(846, UINT16, TIME_SECONDS, 0.01)
-}
-
 system_dc_registers = {
-    "system_dc_pv_power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
-    "system_dc_pv_current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
+    "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
+    "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
 }
 
 system_charger_registers = {
-    "system_charger_power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
+    "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
 }
 
 system_power_registers = {
-    "system_system_power": RegisterInfo(860, INT16, UnitOfPower.WATT)
+    "DC System Power": RegisterInfo(860, INT16, UnitOfPower.WATT)
 }
 
 system_bus_registers = {
-    "system_bus_charge_current": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "system_bus_charge_power": RegisterInfo(866, INT16, UnitOfPower.WATT)
+    "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
 }
 
-valid_unit_ids = [ 100, 228, 229
-                   ]
+valid_unit_ids = [ 100, 228, 229]
 
 register_info_dict = { 
     "vebus_registers": vebus_registers, 
-    "battery_registers": battery_registers, 
-    "battery_detail_registers": battery_detail_registers, 
     "solarcharger_registers": solarcharger_registers,
     "system_registers": system_registers,
-    "system_battery_registers": system_battery_registers, 
     "system_dc_registers": system_dc_registers, 
     "system_charger_registers": system_charger_registers,
     "system_power_registers": system_power_registers, 
     "system_bus_registers": system_bus_registers
 
     # DISBALED
+    # "system_battery_registers": system_battery_registers, 
+    # "battery_registers": battery_registers, 
+    # "battery_detail_registers": battery_detail_registers, 
     # "settings_ess_registers": settings_ess_registers, 
     # "inverter_info_registers": inverter_info_registers,
     # "inverter_energy_registers": inverter_energy_registers, 
@@ -1349,3 +900,477 @@ register_info_dict = {
 #     LNG = 9
 #     HYDRAULIC_OIL = 10
 #     RAW_WATER = 11
+
+# battery_registers = {
+#     "Battery power": RegisterInfo(258, INT16, UnitOfPower.WATT),
+#     "Battery voltage": RegisterInfo(259, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Starter battery voltage": RegisterInfo(260, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Battery Current": RegisterInfo(261, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "Battery temperature": RegisterInfo(262, INT16, UnitOfTemperature.CELSIUS, 10),
+#     "Mid-point voltage of the battery bank": RegisterInfo(263, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Mid-point deviation of the battery bank": RegisterInfo(264, UINT16, PERCENTAGE, 100),
+#     "Consumed Amphours": RegisterInfo(265, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
+#     "Battery State of charge": RegisterInfo(266, UINT16, PERCENTAGE, 10),
+#     "Alarm": RegisterInfo(register=267, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low voltage alarm": RegisterInfo(register=268, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High voltage alarm": RegisterInfo(register=269, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low starter-voltage alarm": RegisterInfo(register=270, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High starter-voltage alarm": RegisterInfo(register=271, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low State-of-charge alarm": RegisterInfo(register=272, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low temperature alarm": RegisterInfo(register=273, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High temperature alarm": RegisterInfo(register=274, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Mid-voltage alarm": RegisterInfo(register=275, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low fused-voltage alarm": RegisterInfo(register=276, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High fused-voltage alarm": RegisterInfo(register=277, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Fuse blown alarm": RegisterInfo(register=278, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High internal-temperature alarm": RegisterInfo(register=279, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Relay status": RegisterInfo(register=280, dataType=UINT16, entityType=SwitchWriteType()),
+#     "Deepest discharge": RegisterInfo(281, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
+#     "Last discharge": RegisterInfo(282, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
+#     "Average discharge": RegisterInfo(283, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
+#     "Charge cycles": RegisterInfo(284, UINT16),
+#     "Full discharges": RegisterInfo(285, UINT16),
+#     "Total Ah drawn": RegisterInfo(286, UINT16, ELECTRIC_CURRENT_AMPERE, -10),
+#     "Minimum voltage": RegisterInfo(287, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Maximum voltage": RegisterInfo(288, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Time since last full charge": RegisterInfo(289, UINT16, TIME_SECONDS, 0.01),
+#     "Automatic syncs": RegisterInfo(290, UINT16),
+#     "Low voltage alarms": RegisterInfo(291, UINT16),
+#     "High voltage alarms": RegisterInfo(292, UINT16),
+#     "Low starter voltage alarms": RegisterInfo(293, UINT16),
+#     "High starter voltage alarms": RegisterInfo(294, UINT16),
+#     "Minimum starter voltage": RegisterInfo(295, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Maximum starter voltage": RegisterInfo(296, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Low fused-voltage alarms": RegisterInfo(297, UINT16),
+#     "High fused-voltage alarms": RegisterInfo(298, UINT16),
+#     "Minimum fused voltage": RegisterInfo(299, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Maximum fused voltage": RegisterInfo(300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "Discharged Energy": RegisterInfo(301, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "Charged Energy": RegisterInfo(302, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "Time to go": RegisterInfo(303, UINT16, TIME_SECONDS, 0.01),
+#     "State of health": RegisterInfo(304, UINT16, PERCENTAGE, 10),
+#     "Max charge voltage": RegisterInfo(305, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+#     "Min discharge voltage": RegisterInfo(306, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+#     "Max charge current": RegisterInfo(307, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "Max discharge current": RegisterInfo(308, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "Capacity": RegisterInfo(309, UINT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "Diagnostics; 1st last error timestamp": RegisterInfo(310, INT32, "timestamp"),
+#     "Diagnostics; 2nd last error timestamp": RegisterInfo(312, INT32, "timestamp"),
+#     "Diagnostics; 3rd last error timestamp": RegisterInfo(314, INT32, "timestamp"),
+#     "Diagnostics; 4th last error timestamp": RegisterInfo(316, INT32, "timestamp"),
+#     "Minimum cell temperature": RegisterInfo(318, INT16, UnitOfTemperature.CELSIUS, 10),
+#     "Maximum cell temperature": RegisterInfo(319, INT16, UnitOfTemperature.CELSIUS, 10),
+#     "High charge current alarm": RegisterInfo(register=320, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High discharge current alarm": RegisterInfo(register=321, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Cell imbalance alarm": RegisterInfo(register=322, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Internal failure alarm": RegisterInfo(register=323, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "High charge temperature alarm": RegisterInfo(register=324, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low charge temperature alarm": RegisterInfo(register=325, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Low cell voltage alarm": RegisterInfo(register=326, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+#     "Mode": RegisterInfo(register=327, dataType=UINT16, entityType=TextReadEntityType(battery_mode))
+
+# }
+
+# class battery_state(Enum):
+#     WAIT_START_INIT = 0
+#     BEFORE_BOOT_INIT = 1
+#     BEFORE_BOOT_DELAY_INIT = 2
+#     WAIT_BOOT_INIT = 3
+#     INITIALIZING = 4
+#     BATTERY_VOLTAGE_MEASURE_INIT = 5
+#     BATTERY_CALCULATE_VOLTAGE_INIT = 6
+#     WAIT_BUS_VOLTAGE_INIT = 7
+#     WAIT_LYNX_SHUNT_INIT = 8
+#     RUNNING = 9
+#     ERROR = 10
+#     UNUSED = 11
+#     SHUTDOWN = 12
+#     SLAVE_UPDATING = 13
+#     STANDBY = 14
+#     GOING_TO_RUN = 15
+#     PRE_CHARGING = 16
+
+# class battery_error(Enum):
+#     NONE = 0
+#     BATTERY_INIT_ERROR = 1
+#     NO_BATTERIES_CONNECTED = 2
+#     UNKNOWN_BATTERY_CONNECTED = 3
+#     DIFFERENT_BATTERY_TYPE = 4
+#     NUMBER_OF_BATTERIES_INCORRECT = 5
+#     LYNX_SHUNT_NOT_FOUND = 6
+#     BATTERY_MEASURE_ERROR = 7
+#     INTERNAL_CALCULATION_ERROR = 8
+#     BATTERIES_IN_SERIES_NOT_OK = 9
+#     NUMBER_OF_BATTERIES_INCORRECT_DUPLICATE_1 = 10
+#     HARDWARE_ERROR = 11
+#     WATCHDOG_ERROR = 12
+#     OVER_VOLTAGE = 13
+#     UNDER_VOLTAGE = 14
+#     OVER_TEMPERATURE = 15
+#     UNDER_TEMPERATURE = 16
+#     HARDWARE_FAULT = 17
+#     STANDBY_SHUTDOWN = 18
+#     PRE_CHARGE_CHARGE_ERROR = 19
+#     SAFETY_CONTACTOR_CHECK_ERROR = 20
+#     PRE_CHARGE_DISCHARGE_ERROR = 21
+#     ADC_ERROR = 22
+#     SLAVE_ERROR = 23
+#     SLAVE_WARNING = 24
+#     PRE_CHARGE_ERROR = 25
+#     SAFETY_CONTACTOR_ERROR = 26
+#     OVER_CURRENT = 27
+#     SLAVE_UPDATE_FAILED = 28
+#     SLAVE_UPDATE_UNAVAILABLE = 29
+#     CALIBRATION_DATA_LOST = 30
+#     SETTINGS_INVALID = 31
+#     BMS_CABLE = 32
+#     REFERENCE_FAILURE = 33
+#     WRONG_SYSTEM_VOLTAGE = 34
+#     PRE_CHARGE_TIMEOUT = 35
+
+
+# class battery_mode(Enum):
+#     OPEN = 0
+#     STANDBY = 14
+
+
+# battery_detail_registers = {
+#     "battery_state": RegisterInfo(register=1282, dataType=UINT16, entityType=TextReadEntityType(battery_state)),
+#     "battery_error": RegisterInfo(register=1283, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
+#     "battery_system_switch": RegisterInfo(register=1284, dataType=UINT16, entityType=BoolReadEntityType()),
+#     "battery_balancing": RegisterInfo(register=1285, dataType=UINT16, entityType=BoolReadEntityType()),
+#     "battery_system_numberofbatteries": RegisterInfo(1286, UINT16),
+#     "battery_system_batteriesparallel": RegisterInfo(1287, UINT16),
+#     "battery_system_batteriesseries": RegisterInfo(1288, UINT16),
+#     "battery_system_numberofcellsperbattery": RegisterInfo(1289, UINT16),
+#     "battery_system_mincellvoltage": RegisterInfo(1290, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "battery_system_maxcellvoltage": RegisterInfo(1291, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "battery_diagnostics_shutdownsdueerror": RegisterInfo(1292, UINT16),
+#     "battery_diagnostics_lasterror_1": RegisterInfo(register=1293, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
+#     "battery_diagnostics_lasterror_2": RegisterInfo(register=1294, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
+#     "battery_diagnostics_lasterror_3": RegisterInfo(register=1295, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
+#     "battery_diagnostics_lasterror_4": RegisterInfo(register=1296, dataType=UINT16, entityType=TextReadEntityType(battery_error)),
+#     "battery_io_allowtocharge": RegisterInfo(register=1297, dataType=UINT16, entityType=BoolReadEntityType()),
+#     "battery_io_allowtodischarge": RegisterInfo(register=1298, dataType=UINT16, entityType=BoolReadEntityType()),
+#     "battery_io_externalrelay": RegisterInfo(register=1299, dataType=UINT16, entityType=BoolReadEntityType()),
+#     "battery_history_minimumcellvoltage": RegisterInfo(1300, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "battery_history_maximumcellvoltage": RegisterInfo(1301, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "battery_system_numberofmodulesoffline": RegisterInfo(1302, UINT16),
+#     "battery_system_numberofmodulesonline": RegisterInfo(1303, UINT16),
+#     "battery_system_numberofmodulesblockingcharge": RegisterInfo(1304, UINT16),
+#     "battery_system_numberofmodulesblockingdischarge": RegisterInfo(1305, UINT16),
+#     "battery_system_minvoltagecellid": RegisterInfo(1306, STRING(4)),
+#     "battery_system_maxvoltagecellid": RegisterInfo(1310, STRING(4)),
+#     "battery_system_mintemperaturecellid": RegisterInfo(1314, STRING(4)),
+#     "battery_system_maxtemperaturecellid": RegisterInfo(1318, STRING(4))
+# }
+
+# class system_battery_state(Enum):
+#     IDLE = 0
+#     CHARGING = 1
+#     DISCHARGING = 2
+
+# system_battery_registers = {
+#     "system_battery_voltage": RegisterInfo(840, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+#     "system_battery_current": RegisterInfo(841, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "system_battery_power": RegisterInfo(842, INT16, UnitOfPower.WATT),
+#     "system_battery_soc": RegisterInfo(843, UINT16, PERCENTAGE),
+#     "system_battery_state": RegisterInfo(register=844, dataType=UINT16, entityType=TextReadEntityType(system_battery_state)),
+#     "system_battery_amphours": RegisterInfo(845, UINT16, ELECTRIC_CURRENT_AMPERE, -10), #  NOTE should be amp hours
+#     "system_battery_time_to_go": RegisterInfo(846, UINT16, TIME_SECONDS, 0.01)
+# }
+
+
+# class digitalinput_state(Enum):
+#     LOW = 0
+#     HIGH = 1
+#     OFF = 2
+#     ON = 3
+#     NO = 4
+#     YES = 5
+#     OPEN = 6
+#     CLOSED = 7
+#     ALARM = 8
+#     OK = 9
+#     RUNNING = 10
+#     STOPPED = 11
+
+# class digitalinput_type(Enum):
+#     DOOR = 2
+#     BILGE_PUMP = 3
+#     BILGE_ALARM = 4
+#     BURGLAR_ALARM = 5
+#     SMOKE_ALARM = 6
+#     FIRE_ALARM = 7
+#     CO2_ALARM = 8
+
+# class generator_runningbyconditioncode(Enum):
+#     STOPPED = 0
+#     MANUAL = 1
+#     TEST_RUN = 2
+#     LOSS_OF_COMMS = 3
+#     SOC = 4
+#     AC_LOAD = 5
+#     BATTERY_CURRENT = 6
+#     BATTERY_VOLTAGE = 7
+#     INVERTER_TEMPERATURE = 8
+#     INVERTER_OVERLOAD = 9
+#     STOP_ON_AC1 = 10
+
+# class generator_state(Enum):
+#     STOPPED = 0
+#     RUNNING = 1
+#     ERROR = 10
+
+# class generator_error(Enum):
+#     NONE = 0
+#     REMOTE_DISABLED = 1
+#     REMOTE_FAULT = 2
+
+# class evcharger_mode(Enum):
+#     AC_INPUT_1 = 0
+#     AC_OUTPUT = 1
+#     AC_INPUT_2 = 2
+
+# class evcharger_status(Enum):
+#     DISCONNECTED = 0
+#     CONNECTED = 1
+#     CHARGING = 2
+#     CHARGED = 3
+#     WAITING_FOR_SUN = 4
+#     WAITING_FOR_RFID = 5
+#     WAITING_FOR_START = 6
+#     LOW_SOC = 7
+#     GROUND_FAULT = 8
+#     WELDED_CONTACTS = 9
+#     CP_INPUT_SHORTED = 10
+#     RESIDUAL_CURRENT_DETECTED = 11
+#     UNDER_VOLTAGE_DETECTED = 12
+#     OVERVOLTAGE_DETECTED = 13
+#     OVERHEATING_DETECTED = 14
+
+# class alternator_state(Enum):
+#     OFF = 0
+#     FAULT = 2
+#     BULK = 3
+#     ABSORPTION = 4
+#     FLOAT = 5
+#     STORAGE = 6
+#     EQUALIZE = 7
+#     EXTERNAL_CONTROL = 252
+
+# class alternator_errorcode(Enum):
+#     HIGH_BATTERY_TEMPERATURE = 12
+#     HIGH_BATTERY_VOLTAGE = 13
+#     LOW_BATTERY_VOLTAGE = 14
+#     VBAT_EXCEEDS_CPB = 15
+#     HIGH_ALTERNATOR_TEMPERATURE = 21
+#     ALTERNATOR_OVERSPEED = 22
+#     INTERNAL_ERROR = 24
+#     HIGH_FIELD_FET_TEMPERATURE  = 41
+#     SENSOR_MISSING = 42
+#     LOW_VALT = 43
+#     HIGH_VOLTAGE_OFFSET = 44
+#     VALT_EXCEEDS_CPB = 45
+#     BATTERY_DISCONNECT_REQUEST = 51
+#     BATTERY_DISCONNECT_REQUEST_DUPLICATE_1 = 52
+#     BATTERY_INSTANCE_OUT_OF_RANGE = 53
+#     TOO_MANY_BMSES = 54
+#     AEBUS_FAULT = 55
+#     TOO_MANY_Victron_DEVICES = 56
+#     BATTERY_REQUESTED_DISCONNECTION = 58
+#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_1 = 59
+#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_2 = 60
+#     BATTERY_REQUESTED_DISCONNECTION_DUPLICATE_3 = 61
+#     BMS_LOST = 91
+#     FORCED_IDLE = 92
+#     DCDC_CONVERTER_FAIL = 201
+#     DCDC_ERROR = 202
+#     DCDC_ERROR_DUPLICATE_1 = 203
+#     DCDC_ERROR_DUPLICATE_2 = 204
+#     DCDC_ERROR_DUPLICATE_3 = 205
+#     DCDC_ERROR_DUPLICATE_4 = 206
+#     DCDC_ERROR_DUPLICATE_5 = 207
+
+# class multi_mode(Enum):
+#     CHARGER = 1
+#     INVERTER = 2
+#     ON = 3
+#     OFF = 4
+
+# class multi_input_type(Enum):
+#     UNUSED = 0
+#     GRID = 1
+#     GENSET = 2
+#     SHORE = 3
+
+
+# solarcharger_tracker_voltage_registers = {
+#     "solarcharger_tracker_0_voltage": RegisterInfo(3700, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "solarcharger_tracker_1_voltage": RegisterInfo(3701, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "solarcharger_tracker_2_voltage": RegisterInfo(3702, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+#     "solarcharger_tracker_3_voltage": RegisterInfo(3703, UINT16, ELECTRIC_POTENTIAL_VOLT, 100)
+# }
+
+# solarcharger_tracker_registers = {
+#     "solarcharger_tracker_0_yield_today": RegisterInfo(3708, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_1_yield_today": RegisterInfo(3709, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_2_yield_today": RegisterInfo(3710, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_3_yield_today": RegisterInfo(3711, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_0_yield_yesterday": RegisterInfo(3712, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_1_yield_yesterday": RegisterInfo(3713, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_2_yield_yesterday": RegisterInfo(3714, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_3_yield_yesterday": RegisterInfo(3715, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+#     "solarcharger_tracker_0_maxpower_today": RegisterInfo(3716, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_1_maxpower_today": RegisterInfo(3717, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_2_maxpower_today": RegisterInfo(3718, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_3_maxpower_today": RegisterInfo(3719, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_0_maxpower_yesterday": RegisterInfo(3720, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_1_maxpower_yesterday": RegisterInfo(3721, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_2_maxpower_yesterday": RegisterInfo(3722, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_3_maxpower_yesterday": RegisterInfo(3723, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_0_pv_power": RegisterInfo(3724, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_1_pv_power": RegisterInfo(3725, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_2_pv_power": RegisterInfo(3726, UINT16, UnitOfPower.WATT),
+#     "solarcharger_tracker_3_pv_power": RegisterInfo(3727, UINT16, UnitOfPower.WATT),    
+# }
+
+# class genset_status(Enum):
+#     STANDBY = 0
+#     STARTUP_1 = 1
+#     STARTUP_2 = 2
+#     STARTUP_3 = 3
+#     STARTUP_4 = 4
+#     STARTUP_5 = 5
+#     STARTUP_6 = 6
+#     STARTUP_7 = 7
+#     RUNNING = 8
+#     STOPPING = 9
+#     ERROR = 10
+
+# class genset_errorcode(Enum):
+#     NONE = 0
+#     AC_L1_VOLTAGE_TOO_LOW = 1
+#     AC_L1_FREQUENCY_TOO_LOW = 2
+#     AC_L1_CURRENT_TOO_LOW = 3
+#     AC_L1_POWER_TOO_LOW = 4
+#     EMERGENCY_STOP = 5
+#     SERVO_CURRENT_TOO_LOW = 6
+#     OIL_PRESSURE_TOO_LOW = 7
+#     ENGINE_TEMPERATURE_TOO_LOW = 8
+#     WINDING_TEMPERATURE_TOO_LOW = 9
+#     EXHAUST_TEMPERATURE_TOO_LOW = 10
+#     STARTER_CURRENT_TOO_LOW = 13
+#     GLOW_CURRENT_TOO_LOW = 14
+#     GLOW_CURRENT_TOO_LOW_DUPLICATE_1 = 15
+#     FUEL_HOLDING_MAGNET_CURRENT_TOO_LOW = 16
+#     STOP_SOLENOID_HOLD_COIL_CURRENT_TOO_LOW = 17
+#     STOP_SOLENOID_PULL_COIL_CURRENT_TOO_LOW = 18
+#     OPTIONAL_DC_OUT_CURRENT_TOO_LOW = 19
+#     OUTPUT_5V_VOLTAGE_TOO_LOW = 20
+#     BOOST_OUTPUT_CURRENT_TOO_LOW = 21
+#     PANEL_SUPPLY_CURRENT_TOO_HIGH = 22
+#     STARTER_BATTERY_VOLTAGE_TOO_LOW = 25
+#     ROTATION_TOO_LOW_STARTUP_ABORTED = 26
+#     ROTATION_TOO_LOW = 28
+#     POWER_CONTACTER_CURRENT_TOO_LOW = 29
+#     AC_L2_VOLTAGE_TOO_LOW = 30
+#     AC_L2_FREQUENCY_TOO_LOW = 31
+#     AC_L2_CURRENT_TOO_LOW = 32
+#     AC_L2_POWER_TOO_LOW = 33
+#     AC_L3_VOLTAGE_TOO_LOW = 34
+#     AC_L3_FREQUENCY_TOO_LOW = 35
+#     AC_L3_CURRENT_TOO_LOW = 36
+#     AC_L3_POWER_TOO_LOW = 37
+#     FUEL_TEMPERATURE_TOO_LOW = 62
+#     FUEL_LEVEL_TOO_LOW = 63
+#     AC_L1_VOLTAGE_TOO_HIGH = 65
+#     AC_L1_FREQUENCY_TOO_HIGH = 66
+#     AC_L1_CURRENT_TOO_HIGH = 67
+#     AC_L1_POWER_TOO_HIGH = 68
+#     SERVO_CURRENT_TOO_HIGH = 70
+#     OIL_PRESSURE_TOO_HIGH = 71
+#     ENGINE_TEMPERATURE_TOO_HIGH = 72
+#     WINDING_TEMPERATURE_TOO_HIGH = 73
+#     EXHAUST_TEMPERATURE_TOO_HIGH = 74 #NOTE modbustcp spec says it should be too low but that is already specified in the low grouping therefore assuming this state is used for HIGH temp
+#     STARTER_CURRENT_TOO_HIGH = 77 #NOTE same as 74 applies here
+#     GLOW_CURRENT_TOO_HIGH = 78
+#     GLOW_CURRENT_TOO_HIGH_DUPLICATE_1 = 79
+#     FUEL_HOLDING_MAGNET_CURRENT_TOO_HIGH = 80
+#     STOP_SOLENOID_HOLD_COIL_CURRENT_TOO_HIGH = 81
+#     STOP_SOLENOID_PULL_COIL_CURRENT_TOO_HIGH = 82
+#     OPTIONAL_DC_OUT_CURRENT_TOO_HIGH  = 83
+#     OUTPUT_5V_TOO_HIGH = 84
+#     BOOST_OUTPUT_CURRENT_TOO_HIGH = 85
+#     STARTER_BATTERY_VOLTAGE_TOO_HIGH = 89
+#     ROTATION_TOO_HIGH_STARTUP_ABORTED = 90
+#     ROTATION_TOO_HIGH = 92
+#     POWER_CONTACTER_CURRENT_TOO_HIGH  = 93
+#     AC_L2_VOLTAGE_TOO_HIGH = 94
+#     AC_L2_FREQUENCY_TOO_HIGH = 95
+#     AC_L2_CURRENT_TOO_HIGH = 96
+#     AC_L2_POWER_TOO_HIGH = 97
+#     AC_L3_VOLTAGE_TOO_HIGH = 98
+#     AC_L3_FREQUENCY_TOO_HIGH = 99
+#     AC_L3_CURRENT_TOO_HIGH = 100
+#     AC_L3_POWER_TOO_HIGH = 101
+#     FUEL_TEMPERATURE_TOO_HIGH = 126
+#     FUEL_LEVEL_TOO_HIGH = 127
+#     LOST_CONTROL_UNIT = 130
+#     LOST_PANEL = 131
+#     SERVICE_NEEDED = 132
+#     LOST_THREE_PHASE_MODULE = 133
+#     LOST_AGT_MODULE = 134
+#     SYNCHRONIZATION_FAILURE = 135
+#     INTAKE_A154
+#     INVERTER_OVER_TEMPERATURE = 155
+#     INVERTER_OVERLOAD = 156
+#     INVERTER_COMMMUNICATION_LOST  = 157
+#     INVERTER_SYNC_FAILED = 158
+#     CAN_COMMUNICATION_LOST = 159
+#     L1_OVERLOAD = 160
+#     L2_OVERLOAD = 161
+#     L3_OVERLOAD = 162
+#     DC_OVERLOAD = 163
+#     DC_OVERVOLTAGE = 164
+#     EMERGENCY_STOP_DUPLICATE_1 = 165
+#     NO_CONNECTION = 166
+
+
+# class temperature_type(Enum):
+#     BATTERY = 0
+#     FRIDGE = 1
+#     GENERIC = 2IRFILTER = 137
+#     LOST_SYNC_MODULE = 139
+#     LOAD_BALANCE_FAILED = 140
+#     SYNC_MODE_DEACTIVATED  = 141
+#     ENGINE_CONTROLLER = 142
+#     ROTATING_FIELD_WRONG = 148
+#     FUEL_LEVEL_SENSOR_LOST = 149
+#     INIT_FAILED = 150
+#     WATCHDOG = 151
+#     OUTAGE_WINDING = 152
+#     OUTAGE_EXHAUST = 153
+#     OUTAGE_CYCLE_HEAD = 
+
+
+# class generic_position(Enum):
+#     AC_INPUT_1 = 0
+#     AC_OUTPUT = 1
+#     AC_INPUT_2 = 2
+
+# class ess_batterylife_state(Enum):
+#     BL_DISABLED_DUPLICATE_1 = 0
+#     RESTARTING = 1
+#     SELF_CONSUMPTION = 2
+#     SELF_CONSUMPTION_DUPLICATE_1 = 3
+#     SELF_CONSUMPTION_DUPLICATE_2 = 4
+#     DISCHARGE_DISABLED = 5
+#     FORCE_CHARGE = 6
+#     SUSTAIN = 7
+#     LOW_SOC_RECHARGE = 8
+#     KEEP_BATTERIES_CHARGED = 9
+#     BL_DISABLED = 10
+#     BL_DISABLED_LOW_SOC = 11
+#     BL_DISABLED_LOC_SOC_RECHARGE = 12
+
