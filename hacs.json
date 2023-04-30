@@ -1,5 +1,5 @@
 {
-    "name": "Victron GX modbus TCP by Silo",
+    "name": "Victron GX modbus TCP",
     "render_readme": true,
     "homeassistant": "2023.2.0",
     "hacs": "1.28.4"

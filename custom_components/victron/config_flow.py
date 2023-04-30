@@ -66,7 +66,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     except:
         _LOGGER.error("failed to connect to the victron device") 
     return {
-            "title": "Victron",
+            "title": "victron",
             "data": discovered_devices 
         }
 

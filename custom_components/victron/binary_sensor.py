@@ -119,5 +119,5 @@ class VictronBinarySensor(CoordinatorEntity, BinarySensorEntity):
             },
             name=self.unique_id.split('_')[1],
             model=self.unique_id.split('_')[0],
-            manufacturer="Victron",
+            manufacturer="victron",
         )
