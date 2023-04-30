@@ -1,4 +1,4 @@
-"""Support for victron energy switches."""
+"""Support for Victron energy switches."""
 from __future__ import annotations
 
 from typing import Any, cast
@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, HassJob
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .coordinator import victronEnergyDeviceUpdateCoordinator
+from .coordinator import VictronEnergyDeviceUpdateCoordinator
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers import entity
 
@@ -27,13 +27,13 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    """Set up victron switch devices."""
-    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    """Set up Victron switch devices."""
+    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
     _LOGGER.debug("attempting to setup switch entities")
     descriptions = []
     #TODO cleanup
     if config_entry.options[CONF_ADVANCED_OPTIONS]:
-        register_set = victron_coordinator.processed_data()["register_set"]
+        register_set = Victron_coordinator.processed_data()["register_set"]
         for slave, registerLedger in register_set.items():
             for name in registerLedger:
                 for register_name, registerInfo in register_info_dict[name].items():
@@ -56,7 +56,7 @@ async def async_setup_entry(
         entities.append(
             VictronSwitch(
                 hass,
-                victron_coordinator,
+                Victron_coordinator,
                 entity
                 ))
     _LOGGER.debug("adding switches")
@@ -66,12 +66,12 @@ async def async_setup_entry(
 
 @dataclass
 class VictronEntityDescription(SwitchEntityDescription, VictronWriteBaseEntityDescription):
-    """Describes victron sensor entity."""
+    """Describes Victron sensor entity."""
 
 class VictronSwitch(CoordinatorEntity, SwitchEntity):
     """Representation of an Victron switch."""
 
-    def __init__(self, hass: HomeAssistant, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, hass: HomeAssistant, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         self.coordinator = coordinator
         self.description: VictronEntityDescription = description
         self._attr_name = f"{description.name}"

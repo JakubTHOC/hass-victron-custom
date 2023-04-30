@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, HassJob
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .coordinator import victronEnergyDeviceUpdateCoordinator
+from .coordinator import VictronEnergyDeviceUpdateCoordinator
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers import entity
 
@@ -31,13 +31,13 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    """Set up victron select devices."""
-    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    """Set up Victron select devices."""
+    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
     _LOGGER.debug("attempting to setup select entities")
     descriptions = []
     #TODO cleanup
     if config_entry.options[CONF_ADVANCED_OPTIONS]:
-        register_set = victron_coordinator.processed_data()["register_set"]
+        register_set = Victron_coordinator.processed_data()["register_set"]
         for unit, registerLedger in register_set.items():
             for name in registerLedger:
                 for register_name, registerInfo in register_info_dict[name].items():
@@ -60,7 +60,7 @@ async def async_setup_entry(
         entities.append(
             VictronSelect(
                 hass,
-                victron_coordinator,
+                Victron_coordinator,
                 entity
                 ))
     _LOGGER.debug("adding selects")
@@ -70,13 +70,13 @@ async def async_setup_entry(
 
 @dataclass
 class VictronEntityDescription(SelectEntityDescription, VictronWriteBaseEntityDescription):
-    """Describes victron sensor entity."""
+    """Describes Victron sensor entity."""
     options: Enum = None
 
 class VictronSelect(CoordinatorEntity, SelectEntity):
     """Representation of an Victron switch."""
 
-    def __init__(self, hass: HomeAssistant, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, hass: HomeAssistant, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         _LOGGER.debug("select init")
         self.coordinator = coordinator
         self.description: VictronEntityDescription = description

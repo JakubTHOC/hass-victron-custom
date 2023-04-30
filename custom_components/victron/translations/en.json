@@ -7,7 +7,7 @@
             "cannot_connect": "Failed to connect",
             "invalid_auth": "Invalid authentication",
             "unknown": "Unexpected error",
-            "already_configured": "Only one instance of the victron integration supported at this time"
+            "already_configured": "Only one instance of the Victron integration supported at this time"
         },
         "step": {
             "user": {

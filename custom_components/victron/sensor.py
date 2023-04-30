@@ -13,7 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.sensor import SensorEntityDescription, SensorDeviceClass, SensorEntity, DOMAIN as SENSOR_DOMAIN
 
-from .coordinator import victronEnergyDeviceUpdateCoordinator
+from .coordinator import VictronEnergyDeviceUpdateCoordinator
 from .base import VictronBaseEntityDescription
 from .const import DOMAIN, register_info_dict, CONF_ADVANCED_OPTIONS, ReadEntityType, TextReadEntityType, BoolReadEntityType
 
@@ -43,12 +43,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up Victron energy sensor entries."""
     _LOGGER.debug("attempting to setup sensor entities")
-    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
-    _LOGGER.debug(victron_coordinator.processed_data()["register_set"])
-    _LOGGER.debug(victron_coordinator.processed_data()["data"])
+    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    _LOGGER.debug(Victron_coordinator.processed_data()["register_set"])
+    _LOGGER.debug(Victron_coordinator.processed_data()["data"])
     descriptions = []
     #TODO cleanup
-    register_set = victron_coordinator.processed_data()["register_set"]
+    register_set = Victron_coordinator.processed_data()["register_set"]
     for slave, registerLedger in register_set.items():
         for name in registerLedger:
             for register_name, registerInfo in register_info_dict[name].items():
@@ -65,7 +65,7 @@ async def async_setup_entry(
                     native_unit_of_measurement=registerInfo.unit,
                     state_class=registerInfo.determine_stateclass(),
                     slave=slave,
-                    device_class=determine_victron_device_class(register_name, registerInfo.unit),
+                    device_class=determine_Victron_device_class(register_name, registerInfo.unit),
                     entity_type=registerInfo.entityType if isinstance(registerInfo.entityType, TextReadEntityType) else None
                 ))
 
@@ -75,14 +75,14 @@ async def async_setup_entry(
         entity = description
         entities.append(
             VictronSensor(
-                victron_coordinator,
+                Victron_coordinator,
                 entity
                 ))
 
     # Add an entity for each sensor type
     async_add_entities(entities, True)
 
-def determine_victron_device_class(name, unit):
+def determine_Victron_device_class(name, unit):
     if unit == PERCENTAGE:
         return SensorDeviceClass.BATTERY
     elif unit in [member.value for member in UnitOfPower]:
@@ -113,13 +113,13 @@ def determine_victron_device_class(name, unit):
 
 @dataclass
 class VictronEntityDescription(SensorEntityDescription, VictronBaseEntityDescription):
-    """Describes victron sensor entity."""
+    """Describes Victron sensor entity."""
     entity_type: ReadEntityType = None
 
 class VictronSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Victron energy sensor."""
 
-    def __init__(self, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         """Initialize the sensor."""
         self.description: VictronEntityDescription = description
         self._attr_device_class = description.device_class

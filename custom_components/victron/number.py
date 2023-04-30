@@ -1,4 +1,4 @@
-"""Support for victron energy slider number entities."""
+"""Support for Victron energy slider number entities."""
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -23,7 +23,7 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .coordinator import victronEnergyDeviceUpdateCoordinator
+from .coordinator import VictronEnergyDeviceUpdateCoordinator
 from .base import VictronWriteBaseEntityDescription
 from .const import ( 
     DOMAIN, 
@@ -48,14 +48,14 @@ async def async_setup_entry(
     config_entry: config_entries.ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up victron switch devices."""
-    victron_coordinator: victronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    """Set up Victron switch devices."""
+    Victron_coordinator: VictronEnergyDeviceUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]
     _LOGGER.debug("attempting to setup number entities")
     descriptions = []
     _LOGGER.debug(config_entry)
     #TODO cleanup
     if config_entry.options[CONF_ADVANCED_OPTIONS]:
-        register_set = victron_coordinator.processed_data()["register_set"]
+        register_set = Victron_coordinator.processed_data()["register_set"]
         for slave, registerLedger in register_set.items():
             for name in registerLedger:
                 for register_name, registerInfo in register_info_dict[name].items():
@@ -85,7 +85,7 @@ async def async_setup_entry(
         entity = description
         entities.append(
             VictronNumber(
-                victron_coordinator,
+                Victron_coordinator,
                 entity
                 ))
     _LOGGER.debug("adding number")
@@ -149,14 +149,14 @@ class VictronNumberStep:
 
 @dataclass
 class VictronEntityDescription(NumberEntityDescription, VictronWriteBaseEntityDescription, VictronNumberMixin, VictronNumberStep):
-    """Describes victron number entity."""
+    """Describes Victron number entity."""
 
 class VictronNumber(NumberEntity):
     """Victron number."""
 
     description: VictronEntityDescription
 
-    def __init__(self, coordinator: victronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
+    def __init__(self, coordinator: VictronEnergyDeviceUpdateCoordinator, description: VictronEntityDescription) -> None:
         """Initialize the entity."""
         self.coordinator = coordinator
         self.description = description
