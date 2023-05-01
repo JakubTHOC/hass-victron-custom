@@ -356,7 +356,7 @@ system_power_registers = {
 }
 
 system_bus_registers = {
-    "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
 }
 
