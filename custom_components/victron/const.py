@@ -297,7 +297,7 @@ vebus_registers = {
     "Energy from battery to AC-in 2": RegisterInfo(88, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from battery to AC-out": RegisterInfo(90, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from AC-out to battery (typically from PV-inverter)": RegisterInfo(92, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
-    # "Low cell voltage imminent": RegisterInfo(94, UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    "Low cell voltage imminent": RegisterInfo(94, UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
     # "Charge state": RegisterInfo(register=95, dataType=UINT16, entityType=TextReadEntityType(vebus_charge_state))
 }
 
