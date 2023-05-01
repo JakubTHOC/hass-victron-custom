@@ -363,8 +363,8 @@ register_info_dict = {
     "system_registers": system_registers,
     "system_dc_registers": system_dc_registers, 
     "system_charger_registers": system_charger_registers,
-    "system_power_registers": system_power_registers, 
-    "system_bus_registers": system_bus_registers
+    "system_power_registers": system_power_registers
+    # "system_bus_registers": system_bus_registers
 
     # DISBALED
     # "system_battery_registers": system_battery_registers, 
