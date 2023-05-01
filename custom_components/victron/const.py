@@ -330,16 +330,16 @@ solarcharger_registers = {
 
 
 system_registers = {
-    # "Victron Serial (System)": RegisterInfo(800, STRING(6)),
+    "Victron Serial (System)": RegisterInfo(800, STRING(6)),
     # "Victron CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
     # "Victron CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
     # "Victron PV - AC-coupled on output": RegisterInfo(808, UINT16, UnitOfPower.WATT),
     # "Victron PV - AC-coupled on input": RegisterInfo(811, UINT16, UnitOfPower.WATT),
     # "Victron PV - AC-coupled on generator": RegisterInfo(814, UINT16, UnitOfPower.WATT),
     # "Victron AC Consumption": RegisterInfo(817, UINT16, UnitOfPower.WATT),
-    # "Victron Grid": RegisterInfo(820, INT16, UnitOfPower.WATT),
-    # "Victron Genset": RegisterInfo(823, INT16, UnitOfPower.WATT),
-    # "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
+    "Victron Grid": RegisterInfo(820, INT16, UnitOfPower.WATT),
+    "Victron Genset": RegisterInfo(823, INT16, UnitOfPower.WATT),
+    "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
 system_dc_registers = {
