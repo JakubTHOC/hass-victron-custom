@@ -323,8 +323,8 @@ solarcharger_registers = {
     "PV power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
     "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
     "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
-    "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
-    "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
+    "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR)
+    # "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
 
 }
 
