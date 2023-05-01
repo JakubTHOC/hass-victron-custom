@@ -302,7 +302,7 @@ vebus_registers = {
 }
 
 solarcharger_registers = {
-    "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
     # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
@@ -325,7 +325,6 @@ solarcharger_registers = {
     "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
     "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
     "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
-
 }
 
 
@@ -342,11 +341,11 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-valid_unit_ids = [229, 228]
+valid_unit_ids = [228]
 
 register_info_dict = { 
-    "solarcharger_registers": solarcharger_registers
-    # "vebus_registers": vebus_registers,
+    # "solarcharger_registers": solarcharger_registers
+    "vebus_registers": vebus_registers
     # "system_registers": system_registers
 
     # "system_dc_registers": system_dc_registers, 
