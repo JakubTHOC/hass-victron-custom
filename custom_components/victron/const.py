@@ -248,13 +248,13 @@ vebus_registers = {
     "Input current": RegisterInfo(6, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Input frequency": RegisterInfo(9, INT16, FREQUENCY_HERTZ, 100),
     "Input power": RegisterInfo(12, INT16, UnitOfPower.WATT, 0.1), # could be either POWER_WATT or POWER_VOLT_AMPERE W was chosen
-    # "Output voltage": RegisterInfo(15, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
+    "Output voltage": RegisterInfo(15, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
     "Output current": RegisterInfo(18, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Output frequency": RegisterInfo(21, INT16, FREQUENCY_HERTZ, 100),
     "Active input current limit": RegisterInfo(22, INT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", True)),
     "Output power": RegisterInfo(23, INT16, UnitOfPower.WATT, 0.1),
     # "Battery voltage": RegisterInfo(26, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    # "Battery current": RegisterInfo(27, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "Battery current": RegisterInfo(27, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     # "Active input": RegisterInfo(register=29, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
     # "VE.Bus state of charge": RegisterInfo(30, UINT16, PERCENTAGE, 10, SliderWriteType()),
     # "VE.Bus state": RegisterInfo(register=31, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)), #This has no unit of measurement
@@ -308,7 +308,7 @@ solarcharger_registers = {
     # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
     # "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
     # "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    # "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     # "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
     # "Equalization time remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
     # "Relay on the charger": RegisterInfo(register=780, dataType=UINT16, entityType=BoolReadEntityType()),
@@ -323,7 +323,7 @@ solarcharger_registers = {
     # "PV power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
     # "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
     # "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
-    # "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
+    "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
     # "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
 
 }
