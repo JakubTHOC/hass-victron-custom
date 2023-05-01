@@ -17,6 +17,7 @@ from datetime import timedelta
 
 from .const import DOMAIN, UINT16, UINT32, INT16, INT32, STRING, RegisterInfo, register_info_dict
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(module)s - %(message)s')
 _LOGGER = logging.getLogger(__name__)
 
 class victronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
@@ -74,7 +75,12 @@ class victronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
                         unavailable_entities[full_key] = False
                         
                     _LOGGER.warning(f"no valid data returned for entities of slave: {unit} if device was physically removed please force a rescan to resolve this issue")
-                else:
+                else:   
+                    _LOGGER.debug(parsed_data.items())
+                    _LOGGER.debug(data)
+                    _LOGGER.debug(register_info_dict[name])
+                    _LOGGER.debug(unit)
+
                     parsed_data = OrderedDict(list(parsed_data.items()) + list(self.parse_register_data(data, register_info_dict[name], unit).items()))
                     for key,value in register_info_dict[name].items():
                         full_key = str(unit) + "." + key
