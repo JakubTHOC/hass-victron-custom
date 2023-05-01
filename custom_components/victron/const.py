@@ -341,12 +341,12 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-valid_unit_ids = [100, 229]
+valid_unit_ids = [100, 229, 228]
 
 register_info_dict = { 
-    # "vebus_registers": vebus_registers
     "system_registers": system_registers,
-    "solarcharger_registers": solarcharger_registers
+    "solarcharger_registers": solarcharger_registers,
+    "vebus_registers": vebus_registers
 
 
     # "system_dc_registers": system_dc_registers, 
