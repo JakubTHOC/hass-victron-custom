@@ -97,8 +97,11 @@ class victronEnergyDeviceUpdateCoordinator(DataUpdateCoordinator):
         buffer.registers, byteorder=Endian.Big
         )
         decoded_data  = OrderedDict()
+        
         for key,value in registerInfo.items():
             full_key = str(unit) + "." + key
+            _LOGGER.debug(value.scale)
+            _LOGGER.debug(value.unit)
             if value.dataType == UINT16:
                 decoded_data[full_key] = self.decode_scaling(decoder.decode_16bit_uint(), value.scale, value.unit)
             elif value.dataType == INT16:
