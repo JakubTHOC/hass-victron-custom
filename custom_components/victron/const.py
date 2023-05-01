@@ -342,7 +342,7 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-valid_unit_ids = [100, 229, 228, 0]
+valid_unit_ids = [100, 229, 228]
 
 register_info_dict = { 
     "system_registers": system_registers,
