@@ -305,8 +305,8 @@ solarcharger_registers = {
     "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
-    # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
-    # "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
+    "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
+    "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
     "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
@@ -324,7 +324,7 @@ solarcharger_registers = {
     "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
     "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
     "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
-    # "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
+    "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
 
 }
 
@@ -342,12 +342,13 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-valid_unit_ids = [ 229, 228]
+valid_unit_ids = [229, 228]
 
 register_info_dict = { 
-    "system_registers": system_registers,
-    "solarcharger_registers": solarcharger_registers,
-    "vebus_registers": vebus_registers
+    "solarcharger_registers": solarcharger_registers
+    # "vebus_registers": vebus_registers,
+    # "system_registers": system_registers
+
     # "system_dc_registers": system_dc_registers, 
     # "system_charger_registers": system_charger_registers
     # "system_power_registers": system_power_registers
