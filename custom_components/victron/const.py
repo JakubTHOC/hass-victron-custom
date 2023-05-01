@@ -342,23 +342,16 @@ system_registers = {
     "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
-system_dc_registers = {
-    # "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
-    # "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
-}
 
-system_charger_registers = {
-    # "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
-}
 
-valid_unit_ids = [100, 228, 229]
+valid_unit_ids = [100, 229, 228, 0]
 
 register_info_dict = { 
     "vebus_registers": vebus_registers, 
     "solarcharger_registers": solarcharger_registers,
-    "system_registers": system_registers,
-    "system_dc_registers": system_dc_registers, 
-    "system_charger_registers": system_charger_registers
+    "system_registers": system_registers
+    # "system_dc_registers": system_dc_registers, 
+    # "system_charger_registers": system_charger_registers
     # "system_power_registers": system_power_registers
     # "system_bus_registers": system_bus_registers
 
@@ -402,6 +395,15 @@ register_info_dict = {
 
 
 # DISBLED
+
+# system_dc_registers = {
+    # "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
+    # "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
+# }
+
+# system_charger_registers = {
+    # "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
+# }
 
 # system_bus_registers = {
 #     "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
