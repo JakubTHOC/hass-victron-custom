@@ -351,7 +351,7 @@ system_charger_registers = {
     # "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
 }
 
-valid_unit_ids = [0, 100, 228, 229, 275]
+valid_unit_ids = [0, 100, 228, 229]
 
 register_info_dict = { 
     "vebus_registers": vebus_registers, 
