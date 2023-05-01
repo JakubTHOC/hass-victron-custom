@@ -352,12 +352,7 @@ system_charger_registers = {
 }
 
 system_power_registers = {
-    # "DC System Power": RegisterInfo(860, INT16, UnitOfPower.WATT)
-}
-
-system_bus_registers = {
-    # "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
+    "DC System Power": RegisterInfo(860, INT16, UnitOfPower.WATT)
 }
 
 valid_unit_ids = [0, 100, 228, 229, 275]
@@ -412,6 +407,10 @@ register_info_dict = {
 
 # DISBLED
 
+# system_bus_registers = {
+#     "VE.Bus charge current (System)": RegisterInfo(865, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+#     "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
+# }
 
 # gavazi_grid_registers = { 
 #     "grid_L1_power": RegisterInfo(2600, INT16, UnitOfPower.WATT),
