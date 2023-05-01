@@ -253,40 +253,40 @@ vebus_registers = {
     "Output frequency": RegisterInfo(21, INT16, FREQUENCY_HERTZ, 100),
     "Active input current limit": RegisterInfo(22, INT16, ELECTRIC_CURRENT_AMPERE, 10, SliderWriteType("AC", True)),
     "Output power": RegisterInfo(23, INT16, UnitOfPower.WATT, 0.1),
-    # "Battery voltage": RegisterInfo(26, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    "Battery voltage": RegisterInfo(26, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "Battery current": RegisterInfo(27, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    # "Active input": RegisterInfo(register=29, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
-    # "VE.Bus state of charge": RegisterInfo(30, UINT16, PERCENTAGE, 10, SliderWriteType()),
-    # "VE.Bus state": RegisterInfo(register=31, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)), #This has no unit of measurement
-    # "VE.Bus Error": RegisterInfo(register=32, dataType=UINT16, entityType=TextReadEntityType(vebus_error)), #This has no unit of measurement
-    # "Switch Position": RegisterInfo(register=33, dataType=UINT16, entityType=SelectWriteType(vebus_mode)), #This has no unit of measurement
-    # "Temperature alarm": RegisterInfo(register=34, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Low battery alarm": RegisterInfo(register=35, dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Overload alarm": RegisterInfo(register=36,dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "ESS power setpoint": RegisterInfo(register=37, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
-    # "ESS disable charge flag phase": RegisterInfo(register=38, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "ESS disable feedback flag phase": RegisterInfo(39, UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "Temperatur sensor alarm": RegisterInfo(register=42, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Voltage sensor alarm": RegisterInfo(register=43, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Temperature alarm": RegisterInfo(register=44, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Low battery alarm": RegisterInfo(register=45, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Overload alarm": RegisterInfo(register=46, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Ripple alarm": RegisterInfo(register=47, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Disable PV inverter": RegisterInfo(register=56, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "VE.Bus BMS allows battery to be charged": RegisterInfo(register=57, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "VE.Bus BMS allows battery to be discharged": RegisterInfo(register=58, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "VE.Bus BMS is expected": RegisterInfo(register=59, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "VE.Bus BMS error": RegisterInfo(register=60, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "Battery temperature": RegisterInfo(61, INT16, UnitOfTemperature.CELSIUS, 10),
-    # "VE.Bus Reset": RegisterInfo(register=62, dataType=UINT16, entityType=ButtonWriteType()), #This has no unit of measurement
-    # "Grid lost alarm": RegisterInfo(register=64, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
-    # "Feed DC overvoltage into grid": RegisterInfo(register=65, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "Maximum overvoltage feed-in power": RegisterInfo(66, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
-    # "AC input 1 ignored": RegisterInfo(register=69, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "AC input 2 ignored": RegisterInfo(register=70, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
-    # "AcPowerSetpoint acts as feed-in limit": RegisterInfo(register=71, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "Solar offset voltage": RegisterInfo(register=72, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
-    # "Sustain active": RegisterInfo(register=73, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "Active input": RegisterInfo(register=29, dataType=UINT16, entityType=TextReadEntityType(generic_activeinput)),
+    "VE.Bus state of charge": RegisterInfo(30, UINT16, PERCENTAGE, 10, SliderWriteType()),
+    "VE.Bus state": RegisterInfo(register=31, dataType=UINT16, entityType=TextReadEntityType(generic_charger_state)), #This has no unit of measurement
+    "VE.Bus Error": RegisterInfo(register=32, dataType=UINT16, entityType=TextReadEntityType(vebus_error)), #This has no unit of measurement
+    "Switch Position": RegisterInfo(register=33, dataType=UINT16, entityType=SelectWriteType(vebus_mode)), #This has no unit of measurement
+    "Temperature alarm": RegisterInfo(register=34, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Low battery alarm": RegisterInfo(register=35, dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Overload alarm": RegisterInfo(register=36,dataType=UINT16,  entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "ESS power setpoint": RegisterInfo(register=37, dataType=INT16, unit=UnitOfPower.WATT, entityType=SliderWriteType("AC", True)),
+    "ESS disable charge flag phase": RegisterInfo(register=38, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "ESS disable feedback flag phase": RegisterInfo(39, UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Temperatur sensor alarm": RegisterInfo(register=42, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Voltage sensor alarm": RegisterInfo(register=43, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Temperature alarm": RegisterInfo(register=44, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Low battery alarm": RegisterInfo(register=45, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Overload alarm": RegisterInfo(register=46, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Ripple alarm": RegisterInfo(register=47, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Disable PV inverter": RegisterInfo(register=56, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "VE.Bus BMS allows battery to be charged": RegisterInfo(register=57, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS allows battery to be discharged": RegisterInfo(register=58, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS is expected": RegisterInfo(register=59, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "VE.Bus BMS error": RegisterInfo(register=60, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "Battery temperature": RegisterInfo(61, INT16, UnitOfTemperature.CELSIUS, 10),
+    "VE.Bus Reset": RegisterInfo(register=62, dataType=UINT16, entityType=ButtonWriteType()), #This has no unit of measurement
+    "Grid lost alarm": RegisterInfo(register=64, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)), #This has no unit of measurement
+    "Feed DC overvoltage into grid": RegisterInfo(register=65, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Maximum overvoltage feed-in power": RegisterInfo(66, UINT16, UnitOfPower.WATT, 0.01, SliderWriteType("AC", False)),
+    "AC input 1 ignored": RegisterInfo(register=69, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "AC input 2 ignored": RegisterInfo(register=70, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
+    "AcPowerSetpoint acts as feed-in limit": RegisterInfo(register=71, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Solar offset voltage": RegisterInfo(register=72, dataType=UINT16, entityType=SwitchWriteType()), #This has no unit of measurement
+    "Sustain active": RegisterInfo(register=73, dataType=UINT16, entityType=BoolReadEntityType()), #This has no unit of measurement
     "Energy from AC-In 1 to AC-out": RegisterInfo(74, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from AC-In 1 to battery": RegisterInfo(76, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
     "Energy from AC-In 2 to AC-out": RegisterInfo(78, UINT32, UnitOfEnergy.KILO_WATT_HOUR, 100),
