@@ -171,6 +171,78 @@ class vebus_charge_state(Enum):
     BULK_STOPPED = 8
     UNKNOWN = 9
 
+class solarcharger_mode(Enum):
+    ON = 1
+    OFF = 4
+
+class solarcharger_state(Enum):
+    OFF = 0
+    FAULT = 2
+    BULK = 3
+    ABSORPTION = 4
+    FLOAT = 5
+    STORAGE = 6
+    EQUALIZE = 7
+    OTHER_HUB_1 = 11
+    EXTERNAL_CONTROL = 252
+
+class solarcharger_equalization_pending(Enum):
+    NO = 0
+    YES = 1
+    ERROR = 2
+    UNAVAILABLE = 3
+
+class generic_charger_errorcode(Enum):
+    NONE = 0
+    TEMPERATURE_HIGH = 1
+    VOLTAGE_HIGH = 2
+    TEMPERATURE_SENSOR_PLUS_MISWIRED = 3
+    TEMPERATURE_SENSOR_MIN_MISWIRED = 4
+    TEMPERATURE_SENSOR_DISCONNECTED = 5
+    VOLTAGE_SENSE_PLUS_MISWIRED = 6
+    VOLTAGE_SENSE_MIN_MISWIRED = 7
+    VOLTAGE_SENSE_DISCONNECTED = 8
+    VOLTAGE_WIRE_LOSSES_TOO_HIGH = 9
+    CHARGER_TEMPERATURE_TOO_HIGH = 17
+    CHARGER_OVER_CURRENT = 18
+    CHARGER_POLARITY_REVERSED = 19
+    BULK_TIME_LIMIT = 20
+    CHARGER_TEMPERATURE_SENSOR_MISWIRED = 22
+    CHARGER_TEMPERATURE_SENSOR_DISCONNECTED = 23
+    INPUT_CURRENT_TOO_HIGH = 34
+
+class generic_mppoperationmode(Enum):
+    OFF = 0
+    LIMITED = 1
+    ACTIVE = 2
+    UNAVAILABLE = 255
+
+class charger_mode(Enum):
+    OFF = 0
+    ON = 1
+    ERROR = 2
+    UNAVAILABLE = 3
+
+class ess_mode(Enum):
+    ESS_PHASE_COMPENSATION = 1
+    ESS_NO_PHASE_COMPENSATION = 2
+    EXTERNAL_CONTROL = 3
+
+class generic_status(Enum):
+    OK = 0
+    DISCONNECTED = 1
+    SHORT_CIRCUITED = 2
+    REVERSE_POLARITY = 3
+    UNKNOWN = 4
+
+class register_input_source(Enum):
+    UNKNOWN = 0
+    GRID = 1
+    GENERATOR = 2
+    SHORE = 3
+    NOT_CONNECTED = 240
+
+
 vebus_registers = { 
     "Input voltage": RegisterInfo(3, UINT16, ELECTRIC_POTENTIAL_VOLT, 10),
     # "Input current": RegisterInfo(6, INT16, ELECTRIC_CURRENT_AMPERE, 10),
@@ -229,125 +301,54 @@ vebus_registers = {
     # "Charge state": RegisterInfo(register=95, dataType=UINT16, entityType=TextReadEntityType(vebus_charge_state))
 }
 
-# 
-class solarcharger_mode(Enum):
-    ON = 1
-    OFF = 4
-
-class solarcharger_state(Enum):
-    OFF = 0
-    FAULT = 2
-    BULK = 3
-    ABSORPTION = 4
-    FLOAT = 5
-    STORAGE = 6
-    EQUALIZE = 7
-    OTHER_HUB_1 = 11
-    EXTERNAL_CONTROL = 252
-
-class solarcharger_equalization_pending(Enum):
-    NO = 0
-    YES = 1
-    ERROR = 2
-    UNAVAILABLE = 3
-
-class generic_charger_errorcode(Enum):
-    NONE = 0
-    TEMPERATURE_HIGH = 1
-    VOLTAGE_HIGH = 2
-    TEMPERATURE_SENSOR_PLUS_MISWIRED = 3
-    TEMPERATURE_SENSOR_MIN_MISWIRED = 4
-    TEMPERATURE_SENSOR_DISCONNECTED = 5
-    VOLTAGE_SENSE_PLUS_MISWIRED = 6
-    VOLTAGE_SENSE_MIN_MISWIRED = 7
-    VOLTAGE_SENSE_DISCONNECTED = 8
-    VOLTAGE_WIRE_LOSSES_TOO_HIGH = 9
-    CHARGER_TEMPERATURE_TOO_HIGH = 17
-    CHARGER_OVER_CURRENT = 18
-    CHARGER_POLARITY_REVERSED = 19
-    BULK_TIME_LIMIT = 20
-    CHARGER_TEMPERATURE_SENSOR_MISWIRED = 22
-    CHARGER_TEMPERATURE_SENSOR_DISCONNECTED = 23
-    INPUT_CURRENT_TOO_HIGH = 34
-
-class generic_mppoperationmode(Enum):
-    OFF = 0
-    LIMITED = 1
-    ACTIVE = 2
-    UNAVAILABLE = 255
-
 solarcharger_registers = {
-    "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
-    "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
-    "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
-    "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
-    "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
-    "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
-    "Equalization time remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
-    "Relay on the charger": RegisterInfo(register=780, dataType=UINT16, entityType=BoolReadEntityType()),
-    "Solarcharger Alarm": RegisterInfo(register=781, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "Low batt. voltage alarm": RegisterInfo(register=782, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "High batt. voltage alarm": RegisterInfo(register=783, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
-    "Yield today": RegisterInfo(784, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "Maximum charge power today": RegisterInfo(785, UINT16, UnitOfPower.WATT),
-    "Yield yesterday": RegisterInfo(786, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "Maximum charge power yesterday": RegisterInfo(787, UINT16, UnitOfPower.WATT),
-    "Error code": RegisterInfo(register=788, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
-    "PV power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
-    "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
-    "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
-    "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
-    "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
+    # "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
+    # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
+    # "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
+    # "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    # "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
+    # "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
+    # "Equalization time remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
+    # "Relay on the charger": RegisterInfo(register=780, dataType=UINT16, entityType=BoolReadEntityType()),
+    # "Solarcharger Alarm": RegisterInfo(register=781, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "Low batt. voltage alarm": RegisterInfo(register=782, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "High batt. voltage alarm": RegisterInfo(register=783, dataType=UINT16, entityType=TextReadEntityType(generic_alarm_ledger)),
+    # "Yield today": RegisterInfo(784, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "Maximum charge power today": RegisterInfo(785, UINT16, UnitOfPower.WATT),
+    # "Yield yesterday": RegisterInfo(786, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "Maximum charge power yesterday": RegisterInfo(787, UINT16, UnitOfPower.WATT),
+    # "Error code": RegisterInfo(register=788, dataType=UINT16, entityType=TextReadEntityType(generic_charger_errorcode)),
+    # "PV power": RegisterInfo(789, UINT16, UnitOfPower.WATT, 10),
+    # "User yield": RegisterInfo(790, UINT16, UnitOfEnergy.KILO_WATT_HOUR, 10),
+    # "MPP operation mode": RegisterInfo(register=791, dataType=UINT16, entityType=TextReadEntityType(generic_mppoperationmode)),
+    # "User yield": RegisterInfo(3728, UINT32, UnitOfEnergy.KILO_WATT_HOUR),
+    # "PV power": RegisterInfo(3730, UINT16, UnitOfPower.WATT)
 
 }
 
-class charger_mode(Enum):
-    OFF = 0
-    ON = 1
-    ERROR = 2
-    UNAVAILABLE = 3
-
-class ess_mode(Enum):
-    ESS_PHASE_COMPENSATION = 1
-    ESS_NO_PHASE_COMPENSATION = 2
-    EXTERNAL_CONTROL = 3
-
-class generic_status(Enum):
-    OK = 0
-    DISCONNECTED = 1
-    SHORT_CIRCUITED = 2
-    REVERSE_POLARITY = 3
-    UNKNOWN = 4
-
-class register_input_source(Enum):
-    UNKNOWN = 0
-    GRID = 1
-    GENERATOR = 2
-    SHORE = 3
-    NOT_CONNECTED = 240
 
 system_registers = {
-    "Victron Serial (System)": RegisterInfo(800, STRING(6)),
-    "Victron CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
-    "Victron CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
-    "Victron PV - AC-coupled on output": RegisterInfo(808, UINT16, UnitOfPower.WATT),
-    "Victron PV - AC-coupled on input": RegisterInfo(811, UINT16, UnitOfPower.WATT),
-    "Victron PV - AC-coupled on generator": RegisterInfo(814, UINT16, UnitOfPower.WATT),
-    "Victron AC Consumption": RegisterInfo(817, UINT16, UnitOfPower.WATT),
-    "Victron Grid": RegisterInfo(820, INT16, UnitOfPower.WATT),
-    "Victron Genset": RegisterInfo(823, INT16, UnitOfPower.WATT),
-    "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
+    # "Victron Serial (System)": RegisterInfo(800, STRING(6)),
+    # "Victron CCGX Relay 1 state": RegisterInfo(register=806, dataType=UINT16, entityType=SwitchWriteType()),
+    # "Victron CCGX Relay 2 state": RegisterInfo(register=807, dataType=UINT16, entityType=SwitchWriteType()),
+    # "Victron PV - AC-coupled on output": RegisterInfo(808, UINT16, UnitOfPower.WATT),
+    # "Victron PV - AC-coupled on input": RegisterInfo(811, UINT16, UnitOfPower.WATT),
+    # "Victron PV - AC-coupled on generator": RegisterInfo(814, UINT16, UnitOfPower.WATT),
+    # "Victron AC Consumption": RegisterInfo(817, UINT16, UnitOfPower.WATT),
+    # "Victron Grid": RegisterInfo(820, INT16, UnitOfPower.WATT),
+    # "Victron Genset": RegisterInfo(823, INT16, UnitOfPower.WATT),
+    # "Victron Active input source": RegisterInfo(register=826, dataType=INT16, entityType=TextReadEntityType(register_input_source))
 }
 
 system_dc_registers = {
-    "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
+    # "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
     "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
 }
 
 system_charger_registers = {
-    "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
+    # "Charger power": RegisterInfo(855, UINT16, UnitOfPower.WATT)
 }
 
 system_power_registers = {
@@ -359,7 +360,7 @@ system_bus_registers = {
     "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
 }
 
-valid_unit_ids = [ 100, 228, 229]
+valid_unit_ids = [100, 228, 229]
 
 register_info_dict = { 
     "vebus_registers": vebus_registers, 
