@@ -307,7 +307,7 @@ solarcharger_registers = {
     "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
     # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
     # "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
-    # "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
+    "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Equalization pending": RegisterInfo(register=778, dataType=UINT16, entityType=TextReadEntityType(solarcharger_equalization_pending)),
     "Equalization time remaining": RegisterInfo(779, UINT16, TIME_SECONDS, 10),
@@ -344,7 +344,7 @@ system_registers = {
 
 system_dc_registers = {
     # "PV - DC-coupled power": RegisterInfo(850, UINT16, UnitOfPower.WATT),
-    "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
+    # "PV - DC-coupled current": RegisterInfo(851, INT16, ELECTRIC_CURRENT_AMPERE, 10)
 }
 
 system_charger_registers = {
@@ -352,7 +352,7 @@ system_charger_registers = {
 }
 
 system_power_registers = {
-    "DC System Power": RegisterInfo(860, INT16, UnitOfPower.WATT)
+    # "DC System Power": RegisterInfo(860, INT16, UnitOfPower.WATT)
 }
 
 system_bus_registers = {
@@ -360,7 +360,7 @@ system_bus_registers = {
     "VE.Bus charge power (System)": RegisterInfo(866, INT16, UnitOfPower.WATT)
 }
 
-valid_unit_ids = [0, 100, 228, 229, 275, 274]
+valid_unit_ids = [0, 100, 228, 229, 275]
 
 register_info_dict = { 
     "vebus_registers": vebus_registers, 
