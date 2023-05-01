@@ -305,7 +305,7 @@ solarcharger_registers = {
     "Battery voltage": RegisterInfo(771, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "Battery current": RegisterInfo(772, INT16, ELECTRIC_CURRENT_AMPERE, 10),
     "Battery temperature": RegisterInfo(773, INT16, UnitOfTemperature.CELSIUS, 10),
-    "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
+    # "Charger on/off": RegisterInfo(register=774, dataType=UINT16, entityType=SelectWriteType(solarcharger_mode)),
     "Charge state": RegisterInfo(register=775, dataType=UINT16, entityType=TextReadEntityType(solarcharger_state)),
     "PV voltage": RegisterInfo(776, UINT16, ELECTRIC_POTENTIAL_VOLT, 100),
     "PV current": RegisterInfo(777, INT16, ELECTRIC_CURRENT_AMPERE, 10),
