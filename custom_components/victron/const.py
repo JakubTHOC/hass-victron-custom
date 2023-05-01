@@ -55,15 +55,15 @@ INT32  = "int32"
 UINT16_MAX = 65535
 
 class EntityType():
-    def __init__(self, entityTypeName)
+    def __init__(self, entityTypeName):
         self.entityTypeName = entityTypeName
 
 class ReadEntityType(EntityType):
-    def __init__(self, entityTypeName: str = "read")
+    def __init__(self, entityTypeName: str = "read"):
         super().__init__(entityTypeName=entityTypeName)
 
 class TextReadEntityType(ReadEntityType):
-    def __init__(self, decodeEnum: Enum)
+    def __init__(self, decodeEnum: Enum):
         super().__init__()
         self.decodeEnum = decodeEnum
 
@@ -80,13 +80,13 @@ class SwitchWriteType(EntityType):
         super().__init__(entityTypeName="switch")
 
 class SliderWriteType(EntityType):
-    def __init__(self, powerType="", negative: bool=False)
+    def __init__(self, powerType="", negative: bool=False):
         super().__init__(entityTypeName="slider")
         self.powerType = powerType
         self.negative = negative
     
 class SelectWriteType(EntityType):
-    def __init__(self, optionsEnum: Enum)
+    def __init__(self, optionsEnum: Enum):
         super().__init__(entityTypeName="select")
         self.options = optionsEnum
 
